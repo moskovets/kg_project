@@ -16,6 +16,15 @@ Vector4::Vector4(double x, double y, double z, double w)
     m_arr[3] = w;
 }
 
+Vector4 Vector4::operator *(const Vector4 &v)
+{
+    double res_arr[4];
+    for(int i = 0; i < 4; i++) {
+        res_arr[i] = m_arr[i] * v.m_arr[i];
+    }
+    return Vector4(res_arr);
+}
+
 void Vector4::normalize3()
 {
     double len = length3();
