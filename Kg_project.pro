@@ -33,7 +33,8 @@ SOURCES += main.cpp\
     model/triangle.cpp \
     model/mesh.cpp \
     graphic/drawer3d.cpp \
-    model/model.cpp
+    model/model.cpp \
+    graphic/render.cpp
 
 HEADERS  += mainwindow.h \
     mygraphicview.h \
@@ -58,7 +59,8 @@ HEADERS  += mainwindow.h \
     model/triangle.h \
     model/mesh.h \
     graphic/drawer3d.h \
-    model/model.h
+    model/model.h \
+    graphic/render.h
 
 FORMS    += mainwindow.ui \
     mygraphicview.ui \

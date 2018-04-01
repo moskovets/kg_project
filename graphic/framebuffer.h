@@ -16,6 +16,8 @@ public:
 
     void swap();
 
+    ZBuffer *getPreviousBuffer();
+
     ZBuffer *getBuffer();
 };
 

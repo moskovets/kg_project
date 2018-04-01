@@ -17,8 +17,16 @@ FrameBuffer::~FrameBuffer()
 
 void FrameBuffer::swap()
 {
-    m_buff[m_currBuff]->clear();
     m_currBuff = (m_currBuff + 1) % m_buffCount;
+    m_buff[m_currBuff]->clear();
+}
+
+ZBuffer *FrameBuffer::getPreviousBuffer()
+{
+    if(m_currBuff > 0)
+        return m_buff[m_currBuff - 1];
+    else
+        return m_buff[m_buffCount - 1];
 }
 
 ZBuffer *FrameBuffer::getBuffer()

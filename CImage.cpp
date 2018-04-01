@@ -38,7 +38,7 @@ void CImage::addPixel(const tPoint &p, const QColor &color)
     res.setRed(color.red() * i + fonColor.red() * (1 - i));
     res.setBlue(color.blue() * i + fonColor.blue() * (1 - i));
 
-    image.setPixelColor(QPoint(p.x, image.height() - p.y), res);
+    image.setPixelColor(QPoint(p.x, image.height() - p.y - 1), res);
 
 }
 
@@ -46,7 +46,7 @@ CImage::CImage() {}
 
 CImage::CImage(tScene &scene, int sizepixel, const QColor &color)
 {
-    sizepixel = 4; //SCALESIZEPIXEL
+    sizepixel = 1; //SCALESIZEPIXEL
     image = QImage((int)scene.scene->width() / sizepixel, (int)scene.scene->height() / sizepixel, QImage::Format_ARGB32);
     image.fill(color);
     fon = color;
@@ -55,7 +55,7 @@ CImage::CImage(tScene &scene, int sizepixel, const QColor &color)
 }
 CImage::CImage(tScene &scene, tPaintParam &param)
 {
-    param.sizePixel = 4;
+    param.sizePixel = 1;
     fon = param.fon;
     scale = param.sizePixel;
     image = QImage((int)scene.scene->width() / scale, (int)scene.scene->height() / scale, QImage::Format_ARGB32);
@@ -82,9 +82,34 @@ void CImage::changeScale(tScene &scene, int sizepixel)
 #include "math/quaternion.h"
 #include "juliafunctions.h"
 
+#include "graphic/drawer3d.h"
+#include "graphic/render.h"
+
 void CImage::algo(tScene &scene, tPaintParam &param)
 {
     qDebug() << image.height() << image.width();
+    std::shared_ptr<FrameBuffer> frame(new FrameBuffer(image.height(), image.width()));
+
+    Drawer3D drawer(frame);
+    Render render(frame);
+
+    Mesh* mesh = new Mesh();
+    Vector4 vertex[3] = { Vector4(-0.1, -0, 1),
+                          Vector4(0.2, 0, 1),
+                          Vector4(0, 0.2, 1)
+                        };
+    Vector4 normal[3] = { Vector4(0, 0, 1),
+                          Vector4(0, 0, 1),
+                          Vector4(0, 0, 1)
+                        };
+    Triangle triangle(vertex, normal);
+    mesh->addTriangle(triangle);
+    Model model(mesh, Color(0, 255));
+    drawer.drawModel(model);
+    drawer.swap();
+    image = render.getImage().scaled(image.width(), image.height());
+    printOnScene(scene);
+    return;
 /*    Dimension4 d4;
     QColor c;
     for(double i = 0; i < 400; i++) {

@@ -31,6 +31,7 @@ Vector4 Vector4::operator +(const Vector4 &v) const
     for(int i = 0; i < 3; i++) {
         res_arr[i] = m_arr[i] + v.m_arr[i];
     }
+    res_arr[3] = 1;
     return Vector4(res_arr);
 }
 void Vector4::normalize3()
@@ -59,7 +60,7 @@ double Vector4::length3() const
 
 double Vector4::length_sqr3() const
 {
-    assert(m_arr[3] == 0);
+    assert(m_arr[3] != 0);
     double res = 0;
     for(int i = 0; i < 3; i++) {
         res += m_arr[i] * m_arr[i];

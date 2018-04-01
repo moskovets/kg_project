@@ -170,7 +170,7 @@ private:
     }
 
 public:
-    Drawer3D(std::shared_ptr <FrameBuffer> &frame, DrawerModeEnum mode = DME_FLAT, Vector4 lightVector = Vector4(1/sqrt(2), 1/sqrt(2), 0)) :
+    Drawer3D(std::shared_ptr <FrameBuffer> &frame, DrawerModeEnum mode = DME_FLAT, Vector4 lightVector = Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3))) :
         m_frame(frame), m_mode(mode), m_lightVector(lightVector)
     {
         m_projectingMatr = Matrix4::createDiagMatrix(1);
