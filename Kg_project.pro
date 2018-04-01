@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     graphic/color.cpp \
     graphic/drawer.cpp \
     graphic/framebuffer.cpp \
-    math/coordinates.cpp
+    math/coordinates.cpp \
+    math/vector4.cpp
 
 HEADERS  += mainwindow.h \
     mygraphicview.h \
@@ -46,7 +47,8 @@ HEADERS  += mainwindow.h \
     graphic/color.h \
     graphic/drawer.h \
     graphic/framebuffer.h \
-    math/coordinates.h
+    math/coordinates.h \
+    math/vector4.h
 
 FORMS    += mainwindow.ui \
     mygraphicview.ui \

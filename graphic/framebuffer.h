@@ -5,8 +5,8 @@
 
 class FrameBuffer
 {
-    const uint8_t m_buffCount = 2;
-    ZBuffer *m_buff[2]; //m_buffCount TODO
+    static const uint8_t m_buffCount = 2;
+    ZBuffer *m_buff[m_buffCount];
     uint8_t m_currBuff;
 
 public:
