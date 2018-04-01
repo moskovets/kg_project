@@ -51,7 +51,7 @@ ZBuffer::~ZBuffer()
 void ZBuffer::addPixel(uint32_t x, uint32_t y, double deep, const Color &c)
 {
     if (x < m_height && y < m_width) {
-        if (deep < m_deep[x][y]) {
+        if (deep < m_deep[x][y] && deep > 0) { // TODO deep > 0
             m_buff[x][y] = c;
             m_deep[x][y] = deep;
         }

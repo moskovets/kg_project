@@ -94,17 +94,18 @@ void CImage::algo(tScene &scene, tPaintParam &param)
     Render render(frame);
 
     Mesh* mesh = new Mesh();
-    Vector4 vertex[3] = { Vector4(-0.1, -0, 1),
-                          Vector4(0.2, 0, 1),
-                          Vector4(0, 0.2, 1)
+    Vector4 vertex[3] = { Vector4(-0.1, -0, 10),
+                          Vector4(0.2, 0, 10),
+                          Vector4(0, 0.2, 10)
                         };
-    Vector4 normal[3] = { Vector4(0, 0, 1),
-                          Vector4(0, 0, 1),
-                          Vector4(0, 0, 1)
+    Vector4 normal[3] = { Vector4(0, 0, -1),
+                          Vector4(0, 0, -1),
+                          Vector4(0, 0, -1)
                         };
     Triangle triangle(vertex, normal);
     mesh->addTriangle(triangle);
-    Model model(mesh, Color(0, 255));
+    Model model(mesh, Color(0, 255), Vector4(0.2, 0.2, 0));
+//    Model model(mesh, Color(0, 255));
     drawer.drawModel(model);
     drawer.swap();
     image = render.getImage().scaled(image.width(), image.height());

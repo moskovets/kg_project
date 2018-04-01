@@ -37,7 +37,7 @@ Vector4 operator *(const Vector4 &v, const Matrix4 &m)
     for(int i = 0; i < 4; i++) {
         tmp = 0;
         for(int j = 0; j < 4; j++) {
-            tmp += v.get(j) * m.m_matr[i][j];
+            tmp += v.get(j) * m.m_matr[j][i];
         }
         res.set(i, tmp);
     }
