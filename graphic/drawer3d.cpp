@@ -24,10 +24,10 @@ void Drawer3D::setProjectingMatr(const Matrix4 &projectingMatr)
 double Drawer3D::m_intensity(const Vector4 &normal) const
 {
     double res = (-normal) * m_lightVector;
-    if(res > 0.2) {
+    if(res > 0.1) {
         return res;
     }
-    return 0.2;
+    return 0.1;
 }
 
 void Drawer3D::m_drawFlatTriangle(const Triangle &triangle, const Color &color)
@@ -183,7 +183,7 @@ void Drawer3D::drawModel(const Model &model)
 
     for (size_t i = 0; i < mesh->count(); i++) {
         Triangle tr = mesh->getTriangle(i);
-        tr.mult(resMatr);
+        tr.multVertex(resMatr);
         m_drawTriangle(tr, color);
     }
 }

@@ -94,13 +94,13 @@ void CImage::algo(tScene &scene, tPaintParam &param)
     Render render(frame);
 
     Mesh* mesh = new Mesh();
-    Vector4 vertex[3] = { Vector4(-0.1, -0, 10),
-                          Vector4(0.2, 0, 10),
-                          Vector4(0, 0.2, 10)
+    Vector4 vertex[3] = { Vector4(-0.1, -0, 4),
+                          Vector4(0.2, 0, 4),
+                          Vector4(0, 0.2, 4)
                         };
-    Vector4 normal[3] = { Vector4(0, 0, -1),
-                          Vector4(0, 0, -1),
-                          Vector4(0, 0, -1)
+    Vector4 normal[3] = { Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)),
+                          Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)),
+                          Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3))
                         };
     Triangle triangle(vertex, normal);
     mesh->addTriangle(triangle);
