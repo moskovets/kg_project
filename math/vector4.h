@@ -14,7 +14,14 @@ public:
 
     Vector4(double x = 0, double y = 0, double z = 0, double w = 1);
 
-    Vector4 operator *(const Vector4 &v);
+    Vector4 operator -() const
+    {
+        return Vector4(-m_arr[0], -m_arr[1], -m_arr[2], -m_arr[3]);
+    }
+
+    double operator *(const Vector4 &v) const;
+
+    Vector4 operator +(const Vector4 &v) const;
 
     void normalize3();
 

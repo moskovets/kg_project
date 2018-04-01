@@ -66,6 +66,10 @@ Matrix4 Matrix4::createMoveMatrix(double dx, double dy, double dz)
     return Matrix4(matr);
 }
 
+Matrix4 Matrix4::createMoveMatrix(const Vector4 &vector)
+{
+    return createMoveMatrix(vector.x(), vector.y(), vector.z());
+}
 Matrix4 Matrix4::createPerspectiveMatrix(double nearPlain, double farPlain, double aspect, double fovyRad)
 {
     double ctg = 1 / tan(fovyRad / 2);
