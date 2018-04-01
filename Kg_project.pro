@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     math/coordinates.cpp \
     math/vector4.cpp \
     math/matrix4.cpp \
-    model/triangle.cpp
+    model/triangle.cpp \
+    model/mesh.cpp
 
 HEADERS  += mainwindow.h \
     mygraphicview.h \
@@ -52,7 +53,8 @@ HEADERS  += mainwindow.h \
     math/coordinates.h \
     math/vector4.h \
     math/matrix4.h \
-    model/triangle.h
+    model/triangle.h \
+    model/mesh.h
 
 FORMS    += mainwindow.ui \
     mygraphicview.ui \
