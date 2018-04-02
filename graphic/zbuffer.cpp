@@ -50,10 +50,10 @@ ZBuffer::~ZBuffer()
 
 void ZBuffer::addPixel(uint32_t x, uint32_t y, double deep, const Color &c)
 {
-    if (x < m_height && y < m_width) {
-        if (deep < m_deep[x][y] && deep > 0) { // TODO deep > 0
-            m_buff[x][y] = c;
-            m_deep[x][y] = deep;
+    if (x < m_width && y < m_height) {
+        if (deep < m_deep[y][x] && deep > 0) { // TODO deep > 0
+            m_buff[y][x] = c;
+            m_deep[y][x] = deep;
         }
     }
 }
@@ -76,15 +76,15 @@ void ZBuffer::clear()
 
 Color ZBuffer::getPixel(uint32_t x, uint32_t y) const
 {
-    if (x < m_height && y < m_width)
-        return m_buff[x][y];
+    if (x < m_width && y < m_height)
+        return m_buff[y][x];
     return m_initColor;
 }
 
 double ZBuffer::getDeep(uint32_t x, uint32_t y) const
 {
-    if (x < m_height && y < m_width)
-        return m_deep[x][y];
+    if (x < m_width && y < m_height)
+        return m_deep[y][x];
     return m_initDeep;
 }
 

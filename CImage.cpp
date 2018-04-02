@@ -93,28 +93,52 @@ void CImage::algo(tScene &scene, tPaintParam &param, BaseFunction *func, tParamF
     //Сферу лучше с большим кол-вом разбиений создавать - 50 - 150
     //Радиус 1
 
-/*
+
     std::shared_ptr<FrameBuffer> frame(new FrameBuffer(image.height(), image.width()));
 
-    Drawer3D drawer(frame);
+    Drawer3D drawer(frame, DME_FLAT);
     Render render(frame);
+    {
+        Mesh* mesh = new Mesh();
 
-    Mesh* mesh = new Mesh();
-    Vector4 vertex[3] = { Vector4(-0.1, -0, 4),
-                          Vector4(0.2, 0, 4),
-                          Vector4(0, 0.2, 4)
-                        };
-    Vector4 normal[3] = { Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)),
-                          Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)),
-                          Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3))
-                        };
-    Triangle triangle(vertex, normal);
-    mesh->addTriangle(triangle);
-    mesh->addSphere(50, 50, 1);
-    Model model(mesh, Color(0, 255), Vector4(0, 0, 4));
-//    Model model(mesh, Color(0, 255), Vector4(0.2, 0.2, 0));
-//    Model model(mesh, Color(0, 255));
-    drawer.drawModel(model);
+        mesh->addSphere(20, 20, 3);
+        Model model(mesh, Color(0, 255), Vector4(0, 0, 8));
+        drawer.drawModel(model);
+
+    }
+    {
+        Mesh* mesh = new Mesh();
+        Vector4 vertex[3] = { Vector4(0, 0, 1),
+                              Vector4(0.1, 0, 1),
+                              Vector4(0, 1, 1)
+                            };
+        Vector4 normal[3] = { Vector4(0, 0, -1),
+                              Vector4(0, 0, -1),
+                              Vector4(0, 0, -1)
+                            };
+        Triangle triangle(vertex, normal);
+        mesh->addTriangle(triangle);
+        Model model(mesh, Color(255), Vector4(0, 0, 0));
+        drawer.drawModel(model);
+
+    }
+   /* {
+        Mesh* mesh = new Mesh();
+        Vector4 vertex[3] = { Vector4(-0.05, -0.2, 3),
+                              Vector4(0.05, -0.2, 3),
+                              Vector4(0, 0.15, 1)
+                            };
+        Vector4 normal[3] = { Vector4(0, 0, -1),
+                              Vector4(0, 0, -1),
+                              Vector4(0, 0, -1)
+                            };
+        Triangle triangle(vertex, normal);
+        mesh->addTriangle(triangle);
+        Model model(mesh, Color(255), Vector4(0, 0, 5));
+        //    Model model(mesh, Color(0, 255), Vector4(0.2, 0.2, 0));
+        //    Model model(mesh, Color(0, 255));
+        drawer.drawModel(model);
+    }*/
     drawer.swap();
     image = render.getImage().scaled(image.width(), image.height());
     printOnScene(scene);

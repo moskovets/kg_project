@@ -19,12 +19,12 @@ std::size_t Mesh::count() const
 
 void Mesh::addSphere(unsigned xnum, unsigned ynum, double radius)
 {
-    if (xnum % 2 == 1)
-        xnum += 1;
+    if (ynum % 2 == 1)
+        ynum += 1;
 
-    Vector4 vertex[200][200];
+    Vector4 vertex[xnum][ynum + 1];
     for (unsigned x = 0; x < xnum; ++x) {
-        for (unsigned y = 0; y < ynum - 1; ++y) {
+        for (unsigned y = 0; y < ynum; ++y) {
             double teta = double(x) * M_PI / xnum;
             double phi = double(y) * M_PI * 2.0 / ynum;
             vertex[x][y] = Vector4(
@@ -33,6 +33,7 @@ void Mesh::addSphere(unsigned xnum, unsigned ynum, double radius)
                         radius * sin(teta) * cos(phi)
                         );
         }
+        vertex[x][ynum] = vertex[x][0];
     }
 
 
@@ -40,8 +41,11 @@ void Mesh::addSphere(unsigned xnum, unsigned ynum, double radius)
     for (unsigned x = 0; x < xnum - 1; ++x) {
         Vector4 ppv = vertex[x][0];
         Vector4 pv = vertex[x + 1][0];
-        for (unsigned y = 0; y < ynum - 1; ++y) {
-            if (y % 2 == 0) {
+        unsigned y = 0;
+        for (unsigned y_iter = 0; ; ++y_iter) {
+            if (y_iter % 2 == 0) {
+                if(y >= ynum + 1)
+                    break;
                 Vector4 v[3] = {
                     ppv,
                     pv,
@@ -54,6 +58,7 @@ void Mesh::addSphere(unsigned xnum, unsigned ynum, double radius)
                 };
                 ppv = pv;
                 pv = vertex[x][y + 1];
+                y++;
 
                 this->addTriangle(Triangle(v, n));
             } else {
@@ -73,16 +78,5 @@ void Mesh::addSphere(unsigned xnum, unsigned ynum, double radius)
                 this->addTriangle(Triangle(v, n));
             }
         }
-        Vector4 v[3] = {
-            ppv,
-            pv,
-            vertex[x][0]
-        };
-        Vector4 n[3] = {
-            ppv.norm3(),
-            pv.norm3(),
-            vertex[x][0].norm3()
-        };
-        this->addTriangle(Triangle(v, n));
     }
 }
