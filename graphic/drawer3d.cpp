@@ -30,6 +30,7 @@ double Drawer3D::m_intensity(const Vector4 &normal) const
     return 0.1;
 }
 
+
 void Drawer3D::m_drawFlatTriangle(const Triangle &triangle, const Color &color)
 {
     int dx = triangle.getVertex(0).x() > triangle.getVertex(2).x() ? 1 : -1;
@@ -42,23 +43,21 @@ void Drawer3D::m_drawFlatTriangle(const Triangle &triangle, const Color &color)
     c.setG(c.g() * inten);
     c.setB(c.b() * inten);
 
-    for(double i = triangle.getVertex(2).x(); i * dx < (triangle.getVertex(0).x() + 0.5) * dx; i += dx) {
-        double y02 = interpolate(triangle.getVertex(0).x(), triangle.getVertex(0).y(),
-                                 triangle.getVertex(2).x(), triangle.getVertex(2).y(), i);
-        double y12 = interpolate(triangle.getVertex(1).x(), triangle.getVertex(1).y(),
-                                 triangle.getVertex(2).x(), triangle.getVertex(2).y(), i);
-        uint32_t x = round(i);
-        double z02 = interpolate(triangle.getVertex(0).x(), triangle.getVertex(0).z(),
-                                 triangle.getVertex(2).x(), triangle.getVertex(2).z(), i);
-        double z12 = interpolate(triangle.getVertex(1).x(), triangle.getVertex(1).z(),
-                                 triangle.getVertex(2).x(), triangle.getVertex(2).z(), i);
-        for(uint32_t y = round(std::min(y02, y12)); y <= round(std::max(y02, y12)); y++) {
+    for(int x = round(triangle.getVertex(2).x()); x * dx <= round(triangle.getVertex(0).x()) * dx; x += dx) {
+        int y02 = round(interpolate(round(triangle.getVertex(0).x()), round(triangle.getVertex(0).y()),
+                                 round(triangle.getVertex(2).x()), round(triangle.getVertex(2).y()), x));
+        int y12 = round(interpolate(round(triangle.getVertex(1).x()), round(triangle.getVertex(1).y()),
+                                 round(triangle.getVertex(2).x()), round(triangle.getVertex(2).y()), x));
+        int z02 = round(interpolate(round(triangle.getVertex(0).x()), round(triangle.getVertex(0).z()),
+                                 round(triangle.getVertex(2).x()), round(triangle.getVertex(2).z()), x));
+        int z12 = round(interpolate(round(triangle.getVertex(1).x()), round(triangle.getVertex(1).z()),
+                                 round(triangle.getVertex(2).x()), round(triangle.getVertex(2).z()), x));
+        for(uint32_t y = (std::min(y02, y12)); y <= (std::max(y02, y12)); y++) {
             double z = interpolate(y02, z02,
                                    y12, z12, y);
             m_frame->getBuffer()->addPixel(x, y, z, c);
         }
     }
-
 }
 
 void Drawer3D::m_drawGuroTriangle(const Triangle &triangle, const Color &color)

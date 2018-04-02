@@ -14,9 +14,9 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    mygraphicview.cpp \
-    mycontroller.cpp \
+        ui/mainwindow.cpp \
+    ui/mygraphicview.cpp \
+    ui/mycontroller.cpp \
     errors.cpp \
     CImage.cpp \
     math/quaternion.cpp \
@@ -36,9 +36,9 @@ SOURCES += main.cpp\
     model/model.cpp \
     graphic/render.cpp
 
-HEADERS  += mainwindow.h \
-    mygraphicview.h \
-    mycontroller.h \
+HEADERS  += ui/mainwindow.h \
+    ui/mygraphicview.h \
+    ui/mycontroller.h \
     my_scene.h \
     errors.h \
     point.h \
@@ -62,6 +62,6 @@ HEADERS  += mainwindow.h \
     model/model.h \
     graphic/render.h
 
-FORMS    += mainwindow.ui \
-    mygraphicview.ui \
-    mycontroller.ui
+FORMS    += ui/mainwindow.ui \
+    ui/mygraphicview.ui \
+    ui/mycontroller.ui

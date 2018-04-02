@@ -24,6 +24,18 @@ enum ALGORITHM {
     CHANGE_SCALE,
     CLEAR_SCENE
 };
+
+struct tParamFractal {
+    double xmin;
+    double xmax;
+    double ymin;
+    double ymax;
+    double zmin;
+    double zmax;
+    double r;
+    double maxIter;
+};
+
 struct tPaintParam {
     int sizePixel;
     QColor color;

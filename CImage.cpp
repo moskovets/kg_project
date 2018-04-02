@@ -88,6 +88,12 @@ void CImage::changeScale(tScene &scene, int sizepixel)
 void CImage::algo(tScene &scene, tPaintParam &param)
 {
     qDebug() << image.height() << image.width();
+
+    //вывести сферу, перенести ее по z только (модель) на 4 единицы
+    //Сферу лучше с большим кол-вом разбиений создавать - 50 - 150
+    //Радиус 1
+
+
     std::shared_ptr<FrameBuffer> frame(new FrameBuffer(image.height(), image.width()));
 
     Drawer3D drawer(frame);
@@ -104,7 +110,9 @@ void CImage::algo(tScene &scene, tPaintParam &param)
                         };
     Triangle triangle(vertex, normal);
     mesh->addTriangle(triangle);
-    Model model(mesh, Color(0, 255), Vector4(0.2, 0.2, 0));
+    mesh->addSphere(50, 50, 1);
+    Model model(mesh, Color(0, 255), Vector4(0, 0, 4));
+//    Model model(mesh, Color(0, 255), Vector4(0.2, 0.2, 0));
 //    Model model(mesh, Color(0, 255));
     drawer.drawModel(model);
     drawer.swap();

@@ -15,6 +15,8 @@ public:
 
     std::size_t count() const;
 
+    void addSphere(unsigned xnum, unsigned ynum, double radius); //TODO значения по умолчанию
+
 };
 
 #endif // MESH_H
