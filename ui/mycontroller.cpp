@@ -43,6 +43,21 @@ MyController::MyController(QWidget *parent) :
 
     ui->maxIterEdit->setValidator(Validator);
 
+    //установка значений по умолчанию
+    ui->aEdit->setText("-0.65");
+    ui->bEdit->setText("-0.5");
+
+    ui->rEdit->setText("3");
+    ui->maxIterEdit->setText("15");
+
+    ui->xminEdit->setText("-2");
+    ui->xmaxEdit->setText("2");
+
+    ui->yminEdit->setText("-1");
+    ui->ymaxEdit->setText("1");
+
+    ui->zminEdit->setText("-2");
+    ui->zmaxEdit->setText("2");
 
     //TODO
     data.fon = QColor(255, 255, 255); //фон черный
@@ -202,29 +217,19 @@ void MyController::on_drawButton_clicked()
     Quaternion c(arr[0], arr[1], arr[2], arr[3]);
     BaseFunction* func = getFunction(c);
 
+    tParamFractal param = {
+        arr[4],
+        arr[5],
+        arr[6],
+        arr[7],
+        arr[8],
+        arr[9],
 
-   // tParamFractal param =
-/*
-    if(ui->fonButton->isChecked()) {
-        data.color = data.fon;
-    }
-    else {
-        data.color = colorLine;
-    }
+        arr[10],
+        (int)arr[11]
+    };
 
-    QPoint center = QPoint(arr[0], arr[1]);
+    image.algo(scene, this->data, func, param);
 
-    if(!(ValidPoint(center))) {
-        delete[] arr;
-        return;
-    }
-    if(ui->ellipseButton->isChecked()) {
-        drawEllipse(center, arr[2], arr[3]);
-    }
-
-    if(ui->circleButton->isChecked()) {
-        drawCircle(center, arr[2]);
-    }
-*/
     delete[] arr;
 }

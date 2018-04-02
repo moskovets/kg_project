@@ -7,23 +7,8 @@
 #include <vector>
 using namespace std;
 
-struct tLine {
-    vector <tPoint> line;
-    int sizePixel;
-    QColor color;
-};
+#include "juliafunctions.h"
 
-enum ALGORITHM {
-    STANDART = 1,
-    BRESENHAM, // алгоритм Брезенхема
-    MID_POINT, // алгоритм средней точки
-    CANON_EQ,  // алгоритм построения по каноническому уравнению
-    PARAM_EQ,  // алгоритм построения по параметрическому уравнению
-
-    CHANGE_FON,
-    CHANGE_SCALE,
-    CLEAR_SCENE
-};
 
 struct tParamFractal {
     double xmin;
@@ -33,7 +18,7 @@ struct tParamFractal {
     double zmin;
     double zmax;
     double r;
-    double maxIter;
+    int maxIter;
 };
 
 struct tPaintParam {
@@ -42,18 +27,6 @@ struct tPaintParam {
     QColor fon;
 };
 
-struct tDataEllipse {
-    QPoint center;
-    int rx;
-    int ry;
-    tPaintParam param;
-};
-
-struct tDataCircle {
-    QPoint center;
-    int radius;
-    tPaintParam param;
-};
 
 typedef unsigned long long int tick_t;
 
@@ -78,7 +51,7 @@ class CImage {
         void changeFon(tScene &scene, const QColor &color);
         void changeScale(tScene &scene, int sizepixel);
 
-        void algo(tScene &scene, tPaintParam &param);
+        void algo(tScene &scene, tPaintParam &param, BaseFunction* func, tParamFractal &paramFract);
 
 };
 

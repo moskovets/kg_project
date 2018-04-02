@@ -32,7 +32,7 @@ void CImage::addPixel(const tPoint &p, const QColor &color)
 {
     double i = p.intensity;
 
-    QColor fonColor = image.pixelColor(QPoint(p.x, image.height() - p.y));
+    QColor fonColor = image.pixelColor(QPoint(p.x, image.height() - p.y - 1));
     QColor res;
     res.setGreen(color.green() * i + fonColor.green() * (1 - i));
     res.setRed(color.red() * i + fonColor.red() * (1 - i));
@@ -85,7 +85,7 @@ void CImage::changeScale(tScene &scene, int sizepixel)
 #include "graphic/drawer3d.h"
 #include "graphic/render.h"
 
-void CImage::algo(tScene &scene, tPaintParam &param)
+void CImage::algo(tScene &scene, tPaintParam &param, BaseFunction *func, tParamFractal &paramFract)
 {
     qDebug() << image.height() << image.width();
 
@@ -93,7 +93,7 @@ void CImage::algo(tScene &scene, tPaintParam &param)
     //Сферу лучше с большим кол-вом разбиений создавать - 50 - 150
     //Радиус 1
 
-
+/*
     std::shared_ptr<FrameBuffer> frame(new FrameBuffer(image.height(), image.width()));
 
     Drawer3D drawer(frame);
@@ -137,11 +137,16 @@ void CImage::algo(tScene &scene, tPaintParam &param)
     printOnScene(scene);
     return;
 */
-    const double r = 3;
+    BaseFunction *f = func; //new Function1(Quaternion(-0.65, -0.5)); //, 0.2, 0.3, 0.4));
+
+
+   const double r = 3;
 
 //    BaseFunction *f = new Function2(Quaternion(0.19, -0.5, 0, 0.1)); //, 0.2, 0.3, 0.4));
-    BaseFunction *f = new Function1(Quaternion(-0.65, -0.5)); //, 0.2, 0.3, 0.4));
-    JuliaSet set(f, r, 15);
+    //BaseFunction *f = new Function1(Quaternion(-0.65, -0.5)); //, 0.2, 0.3, 0.4));
+   // JuliaSet set(f, r, 15);
+
+   JuliaSet set(f, paramFract.r, paramFract.maxIter);
 
     JuliaSetAlgo algoSet(&set);
 
@@ -173,6 +178,7 @@ void CImage::algo(tScene &scene, tPaintParam &param)
     }
 
 */
+    /*
     double xmin = -2;
     double xmax = 2;
 
@@ -187,6 +193,23 @@ void CImage::algo(tScene &scene, tPaintParam &param)
 
     double zmin = -2;
     double zmax = 2;
+
+*/
+
+    double xmin = paramFract.xmin; //-2;
+    double xmax = paramFract.xmax; //2;
+
+    double ymin = paramFract.ymin; //-1;
+    double ymax = paramFract.ymax; //1;
+
+    double dx = (xmax - xmin) / image.width();
+    double dy = (ymax - ymin) / image.height();
+
+    double w = 0;
+    double z;
+
+    double zmin = paramFract.zmin; //-2;
+    double zmax = paramFract.zmax; //2;
 
     double x = xmin;
     for (int xScreen = 0; xScreen < image.width(); xScreen++) {

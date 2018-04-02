@@ -26,6 +26,8 @@ public:
     {
         return new Function1(m_c);
     }
+    virtual ~Function1()
+    {}
 
 };
 
@@ -51,6 +53,8 @@ public:
     {
         return new Function2(m_c);
     }
+    virtual ~Function2()
+    {}
 
 };
 
