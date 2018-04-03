@@ -22,15 +22,15 @@ void Mesh::addSphere(unsigned xnum, unsigned ynum, double radius)
     if (ynum % 2 == 1)
         ynum += 1;
 
-    Vector4 vertex[xnum][ynum + 1];
-    for (unsigned x = 0; x < xnum; ++x) {
+    Vector4 vertex[xnum + 1][ynum + 1];
+    for (unsigned x = 0; x <= xnum; ++x) {
         for (unsigned y = 0; y < ynum; ++y) {
             double teta = double(x) * M_PI / xnum;
             double phi = double(y) * M_PI * 2.0 / ynum;
             vertex[x][y] = Vector4(
                         radius * sin(teta) * cos(phi),
                         radius * cos(teta),
-                        radius * sin(teta) * cos(phi)
+                        radius * sin(teta) * sin(phi)
                         );
         }
         vertex[x][ynum] = vertex[x][0];
@@ -38,7 +38,7 @@ void Mesh::addSphere(unsigned xnum, unsigned ynum, double radius)
 
 
     // Рисование
-    for (unsigned x = 0; x < xnum - 1; ++x) {
+    for (unsigned x = 0; x < xnum; ++x) {
         Vector4 ppv = vertex[x][0];
         Vector4 pv = vertex[x + 1][0];
         unsigned y = 0;
@@ -47,13 +47,13 @@ void Mesh::addSphere(unsigned xnum, unsigned ynum, double radius)
                 if(y >= ynum + 1)
                     break;
                 Vector4 v[3] = {
-                    ppv,
                     pv,
+                    ppv,
                     vertex[x][y + 1]
                 };
                 Vector4 n[3] = {
-                    ppv.norm3(),
                     pv.norm3(),
+                    ppv.norm3(),
                     vertex[x][y + 1].norm3()
                 };
                 ppv = pv;
@@ -79,4 +79,32 @@ void Mesh::addSphere(unsigned xnum, unsigned ynum, double radius)
             }
         }
     }
+}
+
+std::ostream &Mesh::operator <<(std::ostream &os) const
+{
+    for(size_t i = 0; i < m_triangles.size(); i++) {
+        for(int j = 0; j < 3; j++) {
+            Vector4 v = m_triangles[i].getVertex(j);
+            os << "v " << v.x() << " " << v.y() << " " << v.z() << std::endl;
+        }
+    }
+
+    for(size_t i = 0; i < m_triangles.size(); i++) {
+        for(int j = 0; j < 3; j++) {
+            Vector4 v = m_triangles[i].getNormal(j);
+            os << "vn " << v.x() << " " << v.y() << " " << v.z() << std::endl;
+        }
+    }
+    int k = 1;
+    for(size_t i = 0; i < m_triangles.size(); i++) {
+        os << "f "
+           << k << "//" << k << " "
+           << k + 1 << "//"  << k + 1 << " "
+           << k + 2 << "//"  << k + 2 << " "
+           << std::endl;
+        k += 3;
+    }
+
+    return os;
 }

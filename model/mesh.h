@@ -3,6 +3,7 @@
 
 #include "triangle.h"
 #include <vector>
+#include <iostream>
 
 class Mesh
 {
@@ -17,6 +18,7 @@ public:
 
     void addSphere(unsigned xnum, unsigned ynum, double radius); //TODO значения по умолчанию
 
+    std::ostream& operator <<(std::ostream &os) const;
 };
 
 #endif // MESH_H

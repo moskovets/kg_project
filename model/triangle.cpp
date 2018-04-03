@@ -118,3 +118,14 @@ Vector4 Triangle::getNormal(unsigned index) const
 {
     return m_normal[index > 2 ? 2 : index];
 }
+
+void Triangle::toScreenCoord(double w, double h)
+{
+    for(int i = 0; i < 3; i++) {
+        Vector4 v = m_vertex[i];
+        m_vertex[i].setX(round((v.x()/v.w() + 1) * (w / 2.0)));
+        m_vertex[i].setY(round((v.y()/v.w() + 1) * (h / 2.0)));
+        m_vertex[i].setZ(v.z()/v.w()); // TODO W
+        m_vertex[i].setW(1);
+    }
+}

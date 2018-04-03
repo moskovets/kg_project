@@ -76,8 +76,8 @@ Matrix4 Matrix4::createPerspectiveMatrix(double nearPlain, double farPlain, doub
     double matr[4][4] = {
         { ctg/aspect, 0, 0, 0 },
         { 0, ctg, 0, 0 },
-        { 0, 0, (farPlain + nearPlain) / (farPlain - nearPlain), 1 },
-        { 0, 0, 0, (-2 * farPlain * nearPlain) / (farPlain - nearPlain) }
+        { 0, 0, (farPlain + nearPlain) / (farPlain - nearPlain),  1},
+        { 0, 0, (-2 * farPlain * nearPlain) / (farPlain - nearPlain), 0 }
     };
     return Matrix4(matr);
 }

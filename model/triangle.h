@@ -2,6 +2,7 @@
 #define TRIANGLE_H
 
 #include "../math/matrix4.h"
+#include <iostream>
 
 class Triangle
 {
@@ -25,6 +26,9 @@ public:
     Vector4 getVertex(unsigned index) const;
 
     Vector4 getNormal(unsigned index) const;
+
+    void toScreenCoord(double w, double h);
+
 };
 
 #endif // TRIANGLE_H

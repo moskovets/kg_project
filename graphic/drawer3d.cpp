@@ -89,6 +89,7 @@ void Drawer3D::m_drawFlatTriangle(const Triangle &triangle, const Color &color)
         }
     }
 }
+
 */
 void Drawer3D::m_drawGuroTriangle(const Triangle &triangle, const Color &color)
 {
@@ -178,16 +179,23 @@ void Drawer3D::m_drawTriangle(const Triangle &triangle, const Color &color)
     double x[4], y[4], z[4];
     uint32_t h = m_frame->getBuffer()->height();
     uint32_t w = m_frame->getBuffer()->width();
-    Triangle tr = triangle.sortX();
+    Triangle tr = triangle;
+    tr.toScreenCoord(w, h);
+    tr = tr.sortX();
     for(int i = 0; i < 3; i++) {
         Vector4 v = tr.getVertex(i);
+        x[i] = v.x();
+        y[i] = v.y();
+        z[i] = v.z();
+
+
  /*       x[i] = (v.x() + 1) * (w / 2.);
         y[i] = (v.y() + 1) * (h / 2.);
         z[i] = v.z();
         */
-            x[i] = round((v.x()/v.w() + 1) * (w / 2.0));
-            y[i] = round((v.y()/v.w() + 1) * (h / 2.0));
-            z[i] = v.z();
+//            x[i] = round((v.x()/v.w() + 1) * (w / 2.0));
+//            y[i] = round((v.y()/v.w() + 1) * (h / 2.0));
+//            z[i] = v.z()/v.w(); // TODO W
 
     }
 
@@ -219,8 +227,8 @@ void Drawer3D::m_drawTriangle(const Triangle &triangle, const Color &color)
         return;
     }
 
-    x[3] = round(x[1]);
-    y[3] = round(interpolate(x[0], y[0], x[2], y[2], x[3]));
+    x[3] = (x[1]); // riund
+    y[3] = (interpolate(x[0], y[0], x[2], y[2], x[3]));
     z[3] = interpolate(x[0], z[0], x[2], z[2], x[3]);
     Vector4 n_3 = interpolate(tr.getNormal(0), tr.getNormal(2), (x[3] - x[0]) / (x[2] - x[0]));
 
@@ -255,7 +263,7 @@ Drawer3D::Drawer3D(std::shared_ptr<FrameBuffer> &frame, DrawerModeEnum mode, Vec
     m_frame(frame), m_mode(mode), m_lightVector(lightVector)
 {
     m_projectingMatr = Matrix4::createPerspectiveMatrix(0.1, 1000, (double) frame->getBuffer()->width() / frame->getBuffer()->height(), M_PI_2);
-    //        m_projectingMatr = Matrix4::createDiagMatrix(1);
+          //  m_projectingMatr = Matrix4::createDiagMatrix(1);
 }
 
 void Drawer3D::swap()
@@ -278,7 +286,8 @@ void Drawer3D::drawModel(const Model &model)
     for (size_t i = 0; i < mesh->count(); i++) {
         Triangle tr = mesh->getTriangle(i);
         tr.multVertex(resMatr);
-        m_drawTriangle(tr, color);
+        if (tr.getVertex(0).w() > 0 && tr.getVertex(1).w() > 0 && tr.getVertex(2).w() > 0)
+            m_drawTriangle(tr, color);
     }
 }
 

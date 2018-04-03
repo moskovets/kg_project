@@ -85,18 +85,32 @@ void CImage::changeScale(tScene &scene, int sizepixel)
 #include "graphic/drawer3d.h"
 #include "graphic/render.h"
 #include "graphic/setdrawer.h"
+#include <fstream>
 
 void CImage::algo(tScene &scene, tPaintParam &param, BaseFunction *func, tParamFractal &paramFract)
 {
+/*    std::ofstream out;
+    out.open("sphere.obj");
+    {
+        Mesh* mesh = new Mesh();
+        mesh->addSphere(20, 20, 3);
+        mesh->operator <<(out);
+    }
+    out.close();
+    std::cout << "ok" << std::endl;
+//    return;
+
+*/
+
     qDebug() << image.height() << image.width();
 
-    SetDrawer setDrawer(image.height(), image.width(), 20, 20, 1);
-    setDrawer.setPixel(Vector4(0, 0, 8), Color(0, 255));
+    SetDrawer setDrawer(image.height(), image.width(), 20, 20, 0.5);
+    setDrawer.setPixel(Vector4(0, 0, 1), Color(0, 255));
     setDrawer.setPixel(Vector4(2, 3, 20), Color(0, 255));
-    setDrawer.setPixel(Vector4(5, 6, 15), Color(0, 255));
-    setDrawer.setPixel(Vector4(-5, -10, 15), Color(0, 255));
+    setDrawer.setPixel(Vector4(1, 1, 15), Color(0, 255));
+    setDrawer.setPixel(Vector4(-2, -3, 15), Color(0, 255));
     setDrawer.setPixel(Vector4(5, -10, 15), Color(0, 255));
-    setDrawer.setPixel(Vector4(-5, 10, 15), Color(255));
+    setDrawer.setPixel(Vector4(-2, 3, 15), Color(255));
     setDrawer.setPixel(Vector4(-2, 8, 15), Color(255, 255));
 
     image = setDrawer.getImage().scaled(image.width(), image.height());
@@ -241,40 +255,63 @@ return;
     double ymin = paramFract.ymin; //-1;
     double ymax = paramFract.ymax; //1;
 
-    double dx = (xmax - xmin) / image.width();
-    double dy = (ymax - ymin) / image.height();
-
     double w = 0;
     double z;
 
     double zmin = paramFract.zmin; //-2;
     double zmax = paramFract.zmax; //2;
 
-    double x = xmin;
-
     double height = image.height();
     double width = image.width();
-    for (int xScreen = 0; xScreen < image.width(); xScreen++) {
-        double y = ymin;
-        for (int yScreen = 0; yScreen < image.height(); yScreen++) {
+
+    double dx = (xmax - xmin) / image.width();
+    double dy = (ymax - ymin) / image.height();
+
+    for (double x = xmin; x < width; x += dx) {
+        for (double y = ymin; y < height; y += dy) {
             Quaternion startQ(x, y, zmin, w);
             Quaternion res;
-
             if (algoSet.findMinSolutionByC(startQ, zmax, res)) {
                 z = res.c();
-                addPixel(tPoint(xScreen, yScreen, (z - zmin) / (zmax - zmin)), param.color);
 
-                double xDrawer = round((x/width + 1) * (height / 2.0));;
-                double yDrawer = round((y/width + 1) * (height / 2.0));
+                double xDrawer = round((x/width + 1) * (width / 2.0));
+                double yDrawer = round((y/height + 1) * (height / 2.0));
                 double zDrawer = z;
 
                 Vector4 pos(xDrawer, yDrawer, zDrawer, z);
                 setDrawer.setPixel(pos, Color(param.color.red(), param.color.green(), param.color.blue(), param.color.alpha()));
             }
-            y += dy;
         }
-        x += dx;
     }
+
+
+/*    {
+        double x = xmin;
+        double dx = (xmax - xmin) / image.width();
+        double dy = (ymax - ymin) / image.height();
+
+        for (int xScreen = 0; xScreen < image.width(); xScreen++) {
+            double y = ymin;
+            for (int yScreen = 0; yScreen < image.height(); yScreen++) {
+                Quaternion startQ(x, y, zmin, w);
+                Quaternion res;
+
+                if (algoSet.findMinSolutionByC(startQ, zmax, res)) {
+                    z = res.c();
+                    addPixel(tPoint(xScreen, yScreen, (z - zmin) / (zmax - zmin)), param.color);
+
+                    double xDrawer = round((x/width + 1) * (height / 2.0));;
+                    double yDrawer = round((y/width + 1) * (height / 2.0));
+                    double zDrawer = z;
+
+                    Vector4 pos(xDrawer, yDrawer, zDrawer, z);
+                    setDrawer.setPixel(pos, Color(param.color.red(), param.color.green(), param.color.blue(), param.color.alpha()));
+                }
+                y += dy;
+            }
+            x += dx;
+        }
+    }*/
     image = setDrawer.getImage().scaled(image.width(), image.height());
     printOnScene(scene);
 }
