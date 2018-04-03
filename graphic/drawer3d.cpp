@@ -286,7 +286,9 @@ void Drawer3D::drawModel(const Model &model)
     for (size_t i = 0; i < mesh->count(); i++) {
         Triangle tr = mesh->getTriangle(i);
         tr.multVertex(resMatr);
-        if (tr.getVertex(0).w() > 0 && tr.getVertex(1).w() > 0 && tr.getVertex(2).w() > 0)
+        //TODO
+        if (tr.getVertex(0).w() > 0.01 && tr.getVertex(1).w() > 0.01 && tr.getVertex(2).w() > 0.01 &&
+            tr.getVertex(0).z() > 0.01 && tr.getVertex(1).z() > 0.01 && tr.getVertex(2).z() > 0.01)
             m_drawTriangle(tr, color);
     }
 }

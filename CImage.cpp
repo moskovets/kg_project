@@ -104,8 +104,8 @@ void CImage::algo(tScene &scene, tPaintParam &param, BaseFunction *func, tParamF
 
     qDebug() << image.height() << image.width();
 
-    SetDrawer setDrawer(image.height(), image.width(), 20, 20, 0.5);
-    setDrawer.setPixel(Vector4(0, 0, 1), Color(0, 255));
+//    SetDrawer setDrawer(image.height(), image.width(), 20, 20, 0.5);
+    /*setDrawer.setPixel(Vector4(0, 0, 0), Color(0, 255));
     setDrawer.setPixel(Vector4(2, 3, 20), Color(0, 255));
     setDrawer.setPixel(Vector4(1, 1, 15), Color(0, 255));
     setDrawer.setPixel(Vector4(-2, -3, 15), Color(0, 255));
@@ -166,7 +166,7 @@ return;
         //    Model model(mesh, Color(0, 255), Vector4(0.2, 0.2, 0));
         //    Model model(mesh, Color(0, 255));
         drawer.drawModel(model);
-    }*/
+    }
         drawer.swap();
         image = render.getImage().scaled(image.width(), image.height());
         printOnScene(scene);
@@ -261,25 +261,27 @@ return;
     double zmin = paramFract.zmin; //-2;
     double zmax = paramFract.zmax; //2;
 
-    double height = image.height();
-    double width = image.width();
+    double height = image.height() / 4;
+    double width = image.width() / 4;
 
-    double dx = (xmax - xmin) / image.width();
-    double dy = (ymax - ymin) / image.height();
+    SetDrawer setDrawer(height, width, 20, 20, 0.01);
 
-    for (double x = xmin; x < width; x += dx) {
-        for (double y = ymin; y < height; y += dy) {
+    double dx = (xmax - xmin) / width;
+    double dy = (ymax - ymin) / height;
+
+    for (double x = xmin; x < xmax; x += dx) {
+        for (double y = ymin; y < ymax; y += dy) {
             Quaternion startQ(x, y, zmin, w);
             Quaternion res;
             if (algoSet.findMinSolutionByC(startQ, zmax, res)) {
                 z = res.c();
 
-                double xDrawer = round((x/width + 1) * (width / 2.0));
-                double yDrawer = round((y/height + 1) * (height / 2.0));
-                double zDrawer = z;
+                double xDrawer = 2 * (x - xmin) / (xmax - xmin) - 1;
+                double yDrawer = 2 * (y - ymin) / (ymax - ymin) - 1;
+                double zDrawer = z - zmin + 0.2;
 
-                Vector4 pos(xDrawer, yDrawer, zDrawer, z);
-                setDrawer.setPixel(pos, Color(param.color.red(), param.color.green(), param.color.blue(), param.color.alpha()));
+                Vector4 pos(xDrawer, yDrawer, zDrawer);
+                setDrawer.setPixel(pos, Color(255));
             }
         }
     }
