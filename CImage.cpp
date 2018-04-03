@@ -90,16 +90,16 @@ void CImage::algo(tScene &scene, tPaintParam &param, BaseFunction *func, tParamF
 {
     qDebug() << image.height() << image.width();
 
-    SetDrawer drawer(image.height(), image.width(), 20, 20, 1);
-    drawer.setPixel(Vector4(0, 0, 8), Color(0, 255));
-    drawer.setPixel(Vector4(2, 3, 20), Color(0, 255));
-    drawer.setPixel(Vector4(5, 6, 15), Color(0, 255));
-    drawer.setPixel(Vector4(-5, -10, 15), Color(0, 255));
-    drawer.setPixel(Vector4(5, -10, 15), Color(0, 255));
-    drawer.setPixel(Vector4(-5, 10, 15), Color(255));
-    drawer.setPixel(Vector4(-2, 8, 15), Color(255, 255));
+    SetDrawer setDrawer(image.height(), image.width(), 20, 20, 1);
+    setDrawer.setPixel(Vector4(0, 0, 8), Color(0, 255));
+    setDrawer.setPixel(Vector4(2, 3, 20), Color(0, 255));
+    setDrawer.setPixel(Vector4(5, 6, 15), Color(0, 255));
+    setDrawer.setPixel(Vector4(-5, -10, 15), Color(0, 255));
+    setDrawer.setPixel(Vector4(5, -10, 15), Color(0, 255));
+    setDrawer.setPixel(Vector4(-5, 10, 15), Color(255));
+    setDrawer.setPixel(Vector4(-2, 8, 15), Color(255, 255));
 
-    image = drawer.getImage().scaled(image.width(), image.height());
+    image = setDrawer.getImage().scaled(image.width(), image.height());
     printOnScene(scene);
     //вывести сферу, перенести ее по z только (модель) на 4 единицы
     //Сферу лучше с большим кол-вом разбиений создавать - 50 - 150
@@ -251,6 +251,9 @@ return;
     double zmax = paramFract.zmax; //2;
 
     double x = xmin;
+
+    double height = image.height();
+    double width = image.width();
     for (int xScreen = 0; xScreen < image.width(); xScreen++) {
         double y = ymin;
         for (int yScreen = 0; yScreen < image.height(); yScreen++) {
@@ -260,11 +263,19 @@ return;
             if (algoSet.findMinSolutionByC(startQ, zmax, res)) {
                 z = res.c();
                 addPixel(tPoint(xScreen, yScreen, (z - zmin) / (zmax - zmin)), param.color);
+
+                double xDrawer = round((x/width + 1) * (height / 2.0));;
+                double yDrawer = round((y/width + 1) * (height / 2.0));
+                double zDrawer = z;
+
+                Vector4 pos(xDrawer, yDrawer, zDrawer, z);
+                setDrawer.setPixel(pos, Color(param.color.red(), param.color.green(), param.color.blue(), param.color.alpha()));
             }
             y += dy;
         }
         x += dx;
     }
+    image = setDrawer.getImage().scaled(image.width(), image.height());
     printOnScene(scene);
 }
 
