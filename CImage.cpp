@@ -84,45 +84,59 @@ void CImage::changeScale(tScene &scene, int sizepixel)
 
 #include "graphic/drawer3d.h"
 #include "graphic/render.h"
+#include "graphic/setdrawer.h"
 
 void CImage::algo(tScene &scene, tPaintParam &param, BaseFunction *func, tParamFractal &paramFract)
 {
     qDebug() << image.height() << image.width();
 
+    SetDrawer drawer(image.height(), image.width(), 20, 20, 1);
+    drawer.setPixel(Vector4(0, 0, 8), Color(0, 255));
+    drawer.setPixel(Vector4(2, 3, 20), Color(0, 255));
+    drawer.setPixel(Vector4(5, 6, 15), Color(0, 255));
+    drawer.setPixel(Vector4(-5, -10, 15), Color(0, 255));
+    drawer.setPixel(Vector4(5, -10, 15), Color(0, 255));
+    drawer.setPixel(Vector4(-5, 10, 15), Color(255));
+    drawer.setPixel(Vector4(-2, 8, 15), Color(255, 255));
+
+    image = drawer.getImage().scaled(image.width(), image.height());
+    printOnScene(scene);
     //вывести сферу, перенести ее по z только (модель) на 4 единицы
     //Сферу лучше с большим кол-вом разбиений создавать - 50 - 150
     //Радиус 1
 
+return;
 
-    std::shared_ptr<FrameBuffer> frame(new FrameBuffer(image.height(), image.width()));
-
-    Drawer3D drawer(frame, DME_FLAT);
-    Render render(frame);
     {
-        Mesh* mesh = new Mesh();
+        std::shared_ptr<FrameBuffer> frame(new FrameBuffer(image.height(), image.width()));
 
-        mesh->addSphere(20, 20, 3);
-        Model model(mesh, Color(0, 255), Vector4(0, 0, 8));
-        drawer.drawModel(model);
+        Drawer3D drawer(frame, DME_FLAT);
+        Render render(frame);
+        {
+            Mesh* mesh = new Mesh();
 
-    }
-    {
-        Mesh* mesh = new Mesh();
-        Vector4 vertex[3] = { Vector4(0, 0, 1),
-                              Vector4(0.1, 0, 1),
-                              Vector4(0, 1, 1)
-                            };
-        Vector4 normal[3] = { Vector4(0, 0, -1),
-                              Vector4(0, 0, -1),
-                              Vector4(0, 0, -1)
-                            };
-        Triangle triangle(vertex, normal);
-        mesh->addTriangle(triangle);
-        Model model(mesh, Color(255), Vector4(0, 0, 0));
-        drawer.drawModel(model);
+            mesh->addSphere(20, 20, 3);
+            Model model(mesh, Color(0, 255), Vector4(0, 0, 8));
+            drawer.drawModel(model);
 
-    }
-   /* {
+        }
+        {
+            Mesh* mesh = new Mesh();
+            Vector4 vertex[3] = { Vector4(0, 0, 1),
+                                  Vector4(0.1, 0, 1),
+                                  Vector4(0, 1, 1)
+                                };
+            Vector4 normal[3] = { Vector4(0, 0, -1),
+                                  Vector4(0, 0, -1),
+                                  Vector4(0, 0, -1)
+                                };
+            Triangle triangle(vertex, normal);
+            mesh->addTriangle(triangle);
+            Model model(mesh, Color(255), Vector4(0, 0, 0));
+            drawer.drawModel(model);
+
+        }
+        /* {
         Mesh* mesh = new Mesh();
         Vector4 vertex[3] = { Vector4(-0.05, -0.2, 3),
                               Vector4(0.05, -0.2, 3),
@@ -139,9 +153,10 @@ void CImage::algo(tScene &scene, tPaintParam &param, BaseFunction *func, tParamF
         //    Model model(mesh, Color(0, 255));
         drawer.drawModel(model);
     }*/
-    drawer.swap();
-    image = render.getImage().scaled(image.width(), image.height());
-    printOnScene(scene);
+        drawer.swap();
+        image = render.getImage().scaled(image.width(), image.height());
+        printOnScene(scene);
+    }
     return;
 /*    Dimension4 d4;
     QColor c;

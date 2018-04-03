@@ -34,7 +34,8 @@ SOURCES += main.cpp\
     model/mesh.cpp \
     graphic/drawer3d.cpp \
     model/model.cpp \
-    graphic/render.cpp
+    graphic/render.cpp \
+    graphic/setdrawer.cpp
 
 HEADERS  += ui/mainwindow.h \
     ui/mygraphicview.h \
@@ -60,7 +61,8 @@ HEADERS  += ui/mainwindow.h \
     model/mesh.h \
     graphic/drawer3d.h \
     model/model.h \
-    graphic/render.h
+    graphic/render.h \
+    graphic/setdrawer.h
 
 FORMS    += ui/mainwindow.ui \
     ui/mygraphicview.ui \

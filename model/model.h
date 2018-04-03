@@ -12,7 +12,7 @@ class Model
     Vector4 m_position;
 
 public:
-    Model(Mesh* mesh, Color color = Color(0,255), Vector4 position = Vector4());
+    Model(Mesh* mesh = nullptr, Color color = Color(0,255), Vector4 position = Vector4());
 
     Color color() const;
     void setColor(const Color &color);
