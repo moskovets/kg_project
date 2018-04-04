@@ -8,6 +8,7 @@ SetDrawer::SetDrawer(uint32_t h, uint32_t w, unsigned xnum, unsigned ynum, doubl
     m_render = new Render(frame);
     m_mesh = new Mesh();
     m_mesh->addSphere(xnum, ynum, radius);
+    m_mesh->deleteUnvisibleTriangles();
     m_model.setMesh(m_mesh);
 }
 

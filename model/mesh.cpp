@@ -81,6 +81,21 @@ void Mesh::addSphere(unsigned xnum, unsigned ynum, double radius)
     }
 }
 
+void Mesh::deleteUnvisibleTriangles()
+{
+    for (size_t i = 0; i < m_triangles.size(); i++) {
+        if (m_triangles[i].getNormal(0).z() > 0 &&
+            m_triangles[i].getNormal(1).z() > 0 &&
+            m_triangles[i].getNormal(2).z() > 0)
+        {
+            int last = m_triangles.size() - 1;
+            m_triangles[i] = m_triangles[last - 1];
+            m_triangles.pop_back();
+            i--;
+        }
+    }
+}
+
 std::ostream &Mesh::operator <<(std::ostream &os) const
 {
     for(size_t i = 0; i < m_triangles.size(); i++) {

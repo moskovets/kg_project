@@ -42,6 +42,8 @@ void CImage::addPixel(const tPoint &p, const QColor &color)
 
 }
 
+
+
 CImage::CImage() {}
 
 CImage::CImage(tScene &scene, int sizepixel, const QColor &color)
@@ -86,6 +88,7 @@ void CImage::changeScale(tScene &scene, int sizepixel)
 #include "graphic/render.h"
 #include "graphic/setdrawer.h"
 #include <fstream>
+#include <QTime>
 
 void CImage::algo(tScene &scene, tPaintParam &param, BaseFunction *func, tParamFractal &paramFract)
 {
@@ -103,24 +106,26 @@ void CImage::algo(tScene &scene, tPaintParam &param, BaseFunction *func, tParamF
 */
 
     qDebug() << image.height() << image.width();
+/*
+      {
+        SetDrawer setDrawer(image.height(), image.width(), 20, 20, 0.5);
+        setDrawer.setPixel(Vector4(0, 0, 2), Color(0, 255));
+        setDrawer.setPixel(Vector4(2, 3, 20), Color(0, 255));
+        setDrawer.setPixel(Vector4(1, 1, 15), Color(0, 255));
+        setDrawer.setPixel(Vector4(-2, -3, 15), Color(0, 255));
+        setDrawer.setPixel(Vector4(5, -10, 15), Color(0, 255));
+        setDrawer.setPixel(Vector4(-2, 3, 15), Color(255));
+        setDrawer.setPixel(Vector4(-2, 8, 15), Color(255, 255));
 
-//    SetDrawer setDrawer(image.height(), image.width(), 20, 20, 0.5);
-    /*setDrawer.setPixel(Vector4(0, 0, 0), Color(0, 255));
-    setDrawer.setPixel(Vector4(2, 3, 20), Color(0, 255));
-    setDrawer.setPixel(Vector4(1, 1, 15), Color(0, 255));
-    setDrawer.setPixel(Vector4(-2, -3, 15), Color(0, 255));
-    setDrawer.setPixel(Vector4(5, -10, 15), Color(0, 255));
-    setDrawer.setPixel(Vector4(-2, 3, 15), Color(255));
-    setDrawer.setPixel(Vector4(-2, 8, 15), Color(255, 255));
-
-    image = setDrawer.getImage().scaled(image.width(), image.height());
-    printOnScene(scene);
+        image = setDrawer.getImage().scaled(image.width(), image.height());
+        printOnScene(scene);
+    }
     //вывести сферу, перенести ее по z только (модель) на 4 единицы
     //Сферу лучше с большим кол-вом разбиений создавать - 50 - 150
     //Радиус 1
 
 return;
-
+/*
     {
         std::shared_ptr<FrameBuffer> frame(new FrameBuffer(image.height(), image.width()));
 
@@ -269,6 +274,9 @@ return;
     double dx = (xmax - xmin) / width;
     double dy = (ymax - ymin) / height;
 
+    QTime timeStart = QTime::currentTime();
+
+
     for (double x = xmin; x < xmax; x += dx) {
         for (double y = ymin; y < ymax; y += dy) {
             Quaternion startQ(x, y, zmin, w);
@@ -285,6 +293,8 @@ return;
             }
         }
     }
+
+    QTime timePreRender = QTime::currentTime();
 
 
 /*    {
@@ -315,6 +325,154 @@ return;
         }
     }*/
     image = setDrawer.getImage().scaled(image.width(), image.height());
+    QTime timeEnd = QTime::currentTime();
+
+std::cout << "общее время " << timeStart.msecsTo(timeEnd) << std::endl;
+std::cout << "время до рендеринга " << timeStart.msecsTo(timePreRender) << std::endl;
+
+printOnScene(scene);
+}
+
+#define THREAD_NUMBER 3
+#include <thread>
+#include <chrono>
+//deprecated
+void CImage::m_oneThread(BaseFunction *func, tParamFractal &paramFract, int thredNum)
+{
+    BaseFunction *f = func; //new Function1(Quaternion(-0.65, -0.5)); //, 0.2, 0.3, 0.4));
+    JuliaSet set(f, paramFract.r, paramFract.maxIter);
+    JuliaSetAlgo algoSet(&set);
+
+    double xmin = paramFract.xmin; //-2;
+    double xmax = paramFract.xmax; //2;
+
+    double ymin = paramFract.ymin; //-1;
+    double ymax = paramFract.ymax; //1;
+
+    double w = 0;
+    double z;
+
+    double zmin = paramFract.zmin; //-2;
+    double zmax = paramFract.zmax; //2;
+
+    double height = image.height() / 4;
+    double width = image.width() / 4;
+
+    double dx = (xmax - xmin) / width;
+    double dy = (ymax - ymin) / height;
+
+    int currPoint = 0;
+    for (double x = xmin; x < xmax; x += dx) {
+        for (double y = ymin; y < ymax; y += dy) {
+            if (currPoint % THREAD_NUMBER == thredNum) {
+                Quaternion startQ(x, y, zmin, w);
+                Quaternion res;
+                if (algoSet.findMinSolutionByC(startQ, zmax, res)) {
+                    z = res.c();
+
+                    double xDrawer = 2 * (x - xmin) / (xmax - xmin) - 1;
+                    double yDrawer = 2 * (y - ymin) / (ymax - ymin) - 1;
+                    double zDrawer = z - zmin + 0.2;
+
+                    Vector4 pos(xDrawer, yDrawer, zDrawer);
+                    //queue.push(pos);
+                }
+            }
+            currPoint++;
+        }
+    }
+}
+
+
+void m_oneThreadFunc(std::queue<Vector4> &queue, BaseFunction *func, tParamFractal &paramFract, int thredNum, double height, double width)
+{
+    BaseFunction *f = func; //new Function1(Quaternion(-0.65, -0.5)); //, 0.2, 0.3, 0.4));
+    JuliaSet set(f, paramFract.r, paramFract.maxIter);
+    JuliaSetAlgo algoSet(&set);
+
+    double xmin = paramFract.xmin; //-2;
+    double xmax = paramFract.xmax; //2;
+
+    double ymin = paramFract.ymin; //-1;
+    double ymax = paramFract.ymax; //1;
+
+    double w = 0;
+    double z;
+
+    double zmin = paramFract.zmin; //-2;
+    double zmax = paramFract.zmax; //2;
+
+    height /= 4;
+    width  /= 4;
+    double dx = (xmax - xmin) / width;
+    double dy = (ymax - ymin) / height;
+
+    int currPoint = 0;
+    for (double x = xmin; x < xmax; x += dx) {
+        for (double y = ymin; y < ymax; y += dy) {
+            if (currPoint % THREAD_NUMBER == thredNum) {
+                Quaternion startQ(x, y, zmin, w);
+                Quaternion res;
+                if (algoSet.findMinSolutionByC(startQ, zmax, res)) {
+                    z = res.c();
+
+                    double xDrawer = 2 * (x - xmin) / (xmax - xmin) - 1;
+                    double yDrawer = 2 * (y - ymin) / (ymax - ymin) - 1;
+                    double zDrawer = z - zmin + 0.2;
+
+                    Vector4 pos(xDrawer, yDrawer, zDrawer);
+                    queue.push(pos);
+                }
+            }
+            currPoint++;
+        }
+    }
+}
+/* без потоков
+ * общее время 10266
+время до рендеринга 10256
+
+*/
+void CImage::algoThread(tScene &scene, tPaintParam &param, BaseFunction *func, tParamFractal &paramFract)
+{
+    std::queue<Vector4> queue;
+    std::thread thred0(&m_oneThreadFunc, std::ref(queue), func, std::ref(paramFract), 0, image.height(), image.width());
+    std::thread thred1(&m_oneThreadFunc, std::ref(queue), func, std::ref(paramFract), 1, image.height(), image.width());
+    std::thread thred2(&m_oneThreadFunc, std::ref(queue), func, std::ref(paramFract), 2, image.height(), image.width());
+
+    thred0.join();
+    thred1.join();
+    thred2.join();
+
+    double height = image.height() / 4;
+    double width = image.width() / 4;
+
+    SetDrawer setDrawer(height, width, 20, 20, 0.01);
+
+    QTime timeStart = QTime::currentTime();
+
+    //TODO threads call
+    int flag = 0;
+    while(flag < 10) {
+        if (queue.empty()) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            flag++;
+        } else {
+            flag = 0;
+            Vector4 pos = queue.front();
+            queue.pop();
+            setDrawer.setPixel(pos, Color(255));
+        }
+    }
+
+    QTime timePreRender = QTime::currentTime();
+
+    image = setDrawer.getImage().scaled(image.width(), image.height());
+    QTime timeEnd = QTime::currentTime();
+
+    std::cout << "общее время " << timeStart.msecsTo(timeEnd) << std::endl;
+    std::cout << "время до рендеринга " << timeStart.msecsTo(timePreRender) << std::endl;
+
     printOnScene(scene);
 }
 

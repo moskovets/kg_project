@@ -34,6 +34,9 @@ struct tAnaliz {
     tick_t time;
     int max_step;
 };
+#include <stack>
+#include <queue>
+#include "math/vector4.h"
 
 class CImage {
     private:
@@ -43,7 +46,10 @@ class CImage {
         void printOnScene(tScene &scene);
         void addPixel(const tPoint &p,
                       const QColor &color);
-    public:
+
+        void m_oneThread(BaseFunction* func, tParamFractal &paramFract, int thredNum);
+
+public:
         CImage(); //todo
         CImage(int w, int h, int sizepixel); //todo
         CImage(tScene &scene, int sizepixel, const QColor &color);
@@ -52,7 +58,9 @@ class CImage {
         void changeScale(tScene &scene, int sizepixel);
 
         void algo(tScene &scene, tPaintParam &param, BaseFunction* func, tParamFractal &paramFract);
+        void algoThread(tScene &scene, tPaintParam &param, BaseFunction* func, tParamFractal &paramFract);
 
+        static std::queue<Vector4> m_queue;
 };
 
 #include <math.h>

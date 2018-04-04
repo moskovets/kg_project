@@ -18,6 +18,8 @@ public:
 
     void addSphere(unsigned xnum, unsigned ynum, double radius); //TODO значения по умолчанию
 
+    void deleteUnvisibleTriangles();
+
     std::ostream& operator <<(std::ostream &os) const;
 };
 

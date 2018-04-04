@@ -229,7 +229,8 @@ void MyController::on_drawButton_clicked()
         (int)arr[11]
     };
 
-    image.algo(scene, this->data, func, param);
+//    image.algo(scene, this->data, func, param);
+    image.algoThread(scene, this->data, func, param);
 
     delete[] arr;
 }

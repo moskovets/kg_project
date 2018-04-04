@@ -12,6 +12,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = laba1
 TEMPLATE = app
 
+LIBS += -lpthread
 
 SOURCES += main.cpp\
         ui/mainwindow.cpp \
