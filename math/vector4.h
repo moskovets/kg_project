@@ -23,6 +23,8 @@ public:
 
     Vector4 operator +(const Vector4 &v) const;
 
+    Vector4 operator -(const Vector4 &v) const;
+
     void normalize3();
 
     Vector4 norm3() const;

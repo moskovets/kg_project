@@ -333,12 +333,12 @@ std::cout << "время до рендеринга " << timeStart.msecsTo(timePr
 printOnScene(scene);
 }
 
-#define THREAD_MATH_NUMBER   3
+#define THREAD_MATH_NUMBER   1
 #define THREAD_DRAWER_NUMBER 1
 #include <thread>
 #include <chrono>
 #include "ringbuffer.h"
-#define BUFSIZE 10000
+#define BUFSIZE 30000
 
 //deprecated
 void CImage::m_oneThread(BaseFunction *func, tParamFractal &paramFract, int thredNum)
@@ -408,8 +408,8 @@ void m_oneThreadFunc(RingBuffer<Vector4, BUFSIZE> &buff, BaseFunction *func, tPa
     double zmin = paramFract.zmin; //-2;
     double zmax = paramFract.zmax; //2;
 
-    height /= 4;
-    width  /= 4;
+    //height /= 4;
+    //width  /= 4;
     double dx = (xmax - xmin) / width;
     double dy = (ymax - ymin) / height;
 
@@ -428,7 +428,7 @@ void m_oneThreadFunc(RingBuffer<Vector4, BUFSIZE> &buff, BaseFunction *func, tPa
 
                     //Vector4 pos(xDrawer, yDrawer, zDrawer);
                     while (buff.isFull()) {
-                        std::this_thread::sleep_for(std::chrono::milliseconds(40));
+                        std::this_thread::sleep_for(std::chrono::milliseconds(500));
                         std::cout << "thread " << thredNum << "sleep\n";
                     }
                     buff.push(Vector4(xDrawer, yDrawer, zDrawer));
@@ -457,7 +457,7 @@ void m_oneDrawerFunc(RingBuffer<Vector4, BUFSIZE> &buff,  SetDrawer &setDrawer, 
 {
     int flag = 0;
     int popCount = 0;
-    while(flag < 10) {
+    while(flag < 30) {
         if (buff.isEmpty()) {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
             flag++;
@@ -465,9 +465,9 @@ void m_oneDrawerFunc(RingBuffer<Vector4, BUFSIZE> &buff,  SetDrawer &setDrawer, 
             flag = 0;
             Vector4 pos;
             buff.pop(pos);
-            //popCount++;
-            //if(popCount % 100 == 0)
-            //    std::cout << "drawing " << popCount << " points\n";
+            popCount++;
+            if(popCount % 1000 == 0)
+                std::cout << "drawing " << popCount << " points\n";
             setDrawer.setPixel(pos, Color(255));
         }
     }
@@ -481,6 +481,12 @@ void CImage::algoThread(tScene &scene, tPaintParam &param, BaseFunction *func, t
     double width = image.width() / 4;
 
     SetDrawer setDrawer(height, width, 20, 20, 0.01);
+    {
+        setDrawer.setPixel(Vector4(0, 0, 2), Color(0, 255));
+        image = setDrawer.getImage().scaled(image.width(), image.height());
+        printOnScene(scene);
+    }
+    return;
 
     QTime timeStart = QTime::currentTime();
 
@@ -492,7 +498,7 @@ void CImage::algoThread(tScene &scene, tPaintParam &param, BaseFunction *func, t
 
     std::thread threadMath[THREAD_MATH_NUMBER];
     for(int i = 0; i < THREAD_MATH_NUMBER; i++) {
-        threadMath[i] = std::thread(&m_oneThreadFunc, std::ref(buffer), func, std::ref(paramFract), i, image.height(), image.width());
+        threadMath[i] = std::thread(&m_oneThreadFunc, std::ref(buffer), func, std::ref(paramFract), i, height, width);
     }
 
     for(int i = 0; i < THREAD_MATH_NUMBER; i++) {

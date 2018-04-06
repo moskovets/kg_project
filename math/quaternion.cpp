@@ -54,6 +54,17 @@ double Quaternion::length() const
     return sqrt(m_a * m_a + m_b * m_b + m_c * m_c + m_d * m_d);
 }
 
+Quaternion Quaternion::createRotateQ(const Vector4 &v, double angle)
+{
+    Quaternion q;
+    q.m_a = cos(angle / 2);
+    q.m_b = v.x() * sin(angle / 2);
+    q.m_c = v.y() * sin(angle / 2);
+    q.m_d = v.z() * sin(angle / 2);
+    q.normalization();
+    return q;
+}
+
 Quaternion Quaternion::operator *(const Quaternion &q) const
 {
     return Quaternion(m_a * q.m_a - m_b * q.m_b - m_c * q.m_c - m_d * q.m_d,

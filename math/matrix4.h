@@ -22,7 +22,13 @@ public:
 
     static Matrix4 createMoveMatrix(const Vector4 &vector);
 
+    static Matrix4 createRotateMatrix(double xAngle = 0, double yAngle = 0, double zAngle = 0);
+
+    static Vector4 rotateVector(const Vector4 &v, double xAngle = 0, double yAngle = 0, double zAngle = 0);
+
+
     static Matrix4 createPerspectiveMatrix(double nearPlain = 0.1, double farPlain = 1000, double aspect = 1, double fovyRad = M_PI_2);
+
 
 };
 

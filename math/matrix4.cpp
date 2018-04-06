@@ -1,4 +1,5 @@
 #include "matrix4.h"
+#include "quaternion.h"
 
 Matrix4::Matrix4(double matr[][4])
 {
@@ -70,6 +71,34 @@ Matrix4 Matrix4::createMoveMatrix(const Vector4 &vector)
 {
     return createMoveMatrix(vector.x(), vector.y(), vector.z());
 }
+
+Matrix4 Matrix4::createRotateMatrix(double xAngle, double yAngle, double zAngle)
+{
+    Quaternion qx = Quaternion::createRotateQ(Vector4(1, 0, 0), xAngle);
+    Quaternion qy = Quaternion::createRotateQ(Vector4(0, 1, 0), yAngle);
+    Quaternion qz = Quaternion::createRotateQ(Vector4(0, 0, 1), zAngle);
+    Quaternion q = (qz * qy) * qx;
+
+    double matr[4][4] = {
+        { 1 - 2*q.c()*q.c() - 2*q.d()*q.d(), 2*q.b()*q.c() - 2*q.d()*q.a(),     2*q.b()*q.d() + 2*q.c()*q.a(), 0 },
+        { 2*q.b()*q.c() + 2*q.d()*q.a(),     1 - 2*q.b()*q.b() - 2*q.d()*q.d(), 2*q.c()*q.d() - 2*q.b()*q.a(), 0 },
+        { 2*q.b()*q.d() - 2*q.c()*q.a(),     2*q.c()*q.d() + 2*q.b()*q.a(),     1 - 2*q.b()*q.b() - 2*q.c()*q.c(),  1},
+        { 0, 0, 0, 1 }
+    };
+    return Matrix4(matr);
+}
+
+Vector4 Matrix4::rotateVector(const Vector4 &v, double xAngle, double yAngle, double zAngle)
+{
+    Quaternion qx = Quaternion::createRotateQ(Vector4(1, 0, 0), xAngle);
+    Quaternion qy = Quaternion::createRotateQ(Vector4(0, 1, 0), yAngle);
+    Quaternion qz = Quaternion::createRotateQ(Vector4(0, 0, 1), zAngle);
+    Quaternion q = (qz * qy) * qx;
+    Quaternion u = Quaternion(0, v.x(), v.y(), v.z());
+    Quaternion res = (q * u) * q.inverse();
+    return Vector4(res.b(), res.c(), res.d());
+}
+
 Matrix4 Matrix4::createPerspectiveMatrix(double nearPlain, double farPlain, double aspect, double fovyRad)
 {
     double ctg = 1 / tan(fovyRad / 2);

@@ -1,6 +1,7 @@
 #ifndef QUATERNION_H
 #define QUATERNION_H
 
+#include "vector4.h"
 
 class Quaternion
 {
@@ -17,6 +18,8 @@ public:
     Quaternion(double a = 0, double b = 0, double c = 0, double d = 0);
 
     double length() const;
+
+    static Quaternion createRotateQ(const Vector4 &v, double angle = 0);
 
     //q 1 ⋅ q 2 = ( r 1 r 2 − a 1 a 2 − b 1 b 2 − c 1 c 2 ) + ( r 1 a 2 + a 1 r 2 + b 1 c 2 − c 1 b 2 ) ⋅ i +
     //( r 1 b 2 + b 1 r 2 + c 1 a 2 − a 1 c 2 ) ⋅ j + ( r 1 c 2 + c 1 r 2 + a 1 b 2 − b 1 a 2 ) ⋅ k

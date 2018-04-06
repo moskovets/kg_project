@@ -34,6 +34,16 @@ Vector4 Vector4::operator +(const Vector4 &v) const
     res_arr[3] = 1;
     return Vector4(res_arr);
 }
+
+Vector4 Vector4::operator -(const Vector4 &v) const
+{
+    double res_arr[4];
+    for(int i = 0; i < 3; i++) {
+        res_arr[i] = m_arr[i] - v.m_arr[i];
+    }
+    res_arr[3] = 1; //TODO
+    return Vector4(res_arr);
+}
 void Vector4::normalize3()
 {
     double len = length3();

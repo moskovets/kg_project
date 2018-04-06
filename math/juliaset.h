@@ -3,6 +3,11 @@
 
 #include "basefunction.h"
 
+#include "float.h"
+
+//sqrt(DBL_MAX) / 2
+#define BIG_NUMBER 6.7039e+153
+
 class JuliaSet
 {
 private:
@@ -28,6 +33,9 @@ public:
     const BaseFunction *function() const;
     unsigned int maxIter() const;
     double radius() const;
+
+    double dMin(const Quaternion &h0, double alpha = 5, int maxIter = 50, double bigNumber = BIG_NUMBER) const;
+
 };
 
 #endif // JULIASET_H

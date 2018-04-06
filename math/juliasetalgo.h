@@ -18,6 +18,8 @@ private:
 
     bool findSolution(const Quaternion &startQ, const Quaternion &endQ, Quaternion &res) const;
 
+    bool findSolution2(const Quaternion &startQ, const Quaternion &endQ, Quaternion &res) const;
+
 public:
 
 

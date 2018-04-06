@@ -5,9 +5,10 @@
 
 #include "juliafunctions.h"
 #include "math/juliaset.h"
-
+#include <iostream>
 int main(int argc, char *argv[])
 {
+
     Quaternion q1(0.3, -0.1, 0.2, 0.3);
     Quaternion q2 = q1 * q1;
     Quaternion q3 = q1.squaring();

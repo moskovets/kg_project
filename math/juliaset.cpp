@@ -88,6 +88,25 @@ bool JuliaSet::isInSet(const Quaternion &q) const
 
     return resFlag;
 }
+
+
+
+double JuliaSet::dMin(const Quaternion &h0, double alpha, int maxIter, double bigNumber) const
+{
+    Quaternion hn = h0;
+    double dhn = 1;
+    for (int n = 1; n <= maxIter; n++) {
+        dhn = 2 * hn.length() * dhn;
+        hn = m_function->calculate(hn);
+        if (hn.length() > bigNumber) {
+            return bigNumber * bigNumber / dhn * alpha;
+            break;
+        }
+        if (dhn > bigNumber)
+            break;
+    }
+    return alpha * hn.length() / dhn;
+}
 /*
 bool JuliaSet::isInSet(const Quaternion &q) const
 {
