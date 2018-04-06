@@ -333,9 +333,13 @@ std::cout << "время до рендеринга " << timeStart.msecsTo(timePr
 printOnScene(scene);
 }
 
-#define THREAD_NUMBER 3
+#define THREAD_MATH_NUMBER   3
+#define THREAD_DRAWER_NUMBER 1
 #include <thread>
 #include <chrono>
+#include "ringbuffer.h"
+#define BUFSIZE 10000
+
 //deprecated
 void CImage::m_oneThread(BaseFunction *func, tParamFractal &paramFract, int thredNum)
 {
@@ -364,7 +368,7 @@ void CImage::m_oneThread(BaseFunction *func, tParamFractal &paramFract, int thre
     int currPoint = 0;
     for (double x = xmin; x < xmax; x += dx) {
         for (double y = ymin; y < ymax; y += dy) {
-            if (currPoint % THREAD_NUMBER == thredNum) {
+            if (currPoint % THREAD_MATH_NUMBER == thredNum) {
                 Quaternion startQ(x, y, zmin, w);
                 Quaternion res;
                 if (algoSet.findMinSolutionByC(startQ, zmax, res)) {
@@ -384,9 +388,11 @@ void CImage::m_oneThread(BaseFunction *func, tParamFractal &paramFract, int thre
 }
 
 
-void m_oneThreadFunc(std::queue<Vector4> &queue, BaseFunction *func, tParamFractal &paramFract, int thredNum, double height, double width)
+void m_oneThreadFunc(RingBuffer<Vector4, BUFSIZE> &buff, BaseFunction *func, tParamFractal &paramFract, int thredNum, double height, double width)
 {
-    BaseFunction *f = func; //new Function1(Quaternion(-0.65, -0.5)); //, 0.2, 0.3, 0.4));
+    QTime timeStart = QTime::currentTime();
+
+    BaseFunction *f = func->clone(); //new Function1(Quaternion(-0.65, -0.5)); //, 0.2, 0.3, 0.4));
     JuliaSet set(f, paramFract.r, paramFract.maxIter);
     JuliaSetAlgo algoSet(&set);
 
@@ -409,8 +415,8 @@ void m_oneThreadFunc(std::queue<Vector4> &queue, BaseFunction *func, tParamFract
 
     int currPoint = 0;
     for (double x = xmin; x < xmax; x += dx) {
-        for (double y = ymin; y < ymax; y += dy) {
-            if (currPoint % THREAD_NUMBER == thredNum) {
+        if (currPoint % THREAD_MATH_NUMBER == thredNum) {
+            for (double y = ymin; y < ymax; y += dy) {
                 Quaternion startQ(x, y, zmin, w);
                 Quaternion res;
                 if (algoSet.findMinSolutionByC(startQ, zmax, res)) {
@@ -420,29 +426,56 @@ void m_oneThreadFunc(std::queue<Vector4> &queue, BaseFunction *func, tParamFract
                     double yDrawer = 2 * (y - ymin) / (ymax - ymin) - 1;
                     double zDrawer = z - zmin + 0.2;
 
-                    Vector4 pos(xDrawer, yDrawer, zDrawer);
-                    queue.push(pos);
+                    //Vector4 pos(xDrawer, yDrawer, zDrawer);
+                    while (buff.isFull()) {
+                        std::this_thread::sleep_for(std::chrono::milliseconds(40));
+                        std::cout << "thread " << thredNum << "sleep\n";
+                    }
+                    buff.push(Vector4(xDrawer, yDrawer, zDrawer));
                 }
             }
-            currPoint++;
         }
+        currPoint++;
     }
+
+    QTime timeEnd = QTime::currentTime();
+
+    std::cout << "поток математики " << thredNum << " " << timeStart.msecsTo(timeEnd) << std::endl;
+
 }
 /* без потоков
  * общее время 10266
 время до рендеринга 10256
 
+c потоками
+общее время 8045
+время до рендеринга 8034
+
 */
+
+void m_oneDrawerFunc(RingBuffer<Vector4, BUFSIZE> &buff,  SetDrawer &setDrawer, int thredNum)
+{
+    int flag = 0;
+    int popCount = 0;
+    while(flag < 10) {
+        if (buff.isEmpty()) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            flag++;
+        } else {
+            flag = 0;
+            Vector4 pos;
+            buff.pop(pos);
+            //popCount++;
+            //if(popCount % 100 == 0)
+            //    std::cout << "drawing " << popCount << " points\n";
+            setDrawer.setPixel(pos, Color(255));
+        }
+    }
+}
+
 void CImage::algoThread(tScene &scene, tPaintParam &param, BaseFunction *func, tParamFractal &paramFract)
 {
-    std::queue<Vector4> queue;
-    std::thread thred0(&m_oneThreadFunc, std::ref(queue), func, std::ref(paramFract), 0, image.height(), image.width());
-    std::thread thred1(&m_oneThreadFunc, std::ref(queue), func, std::ref(paramFract), 1, image.height(), image.width());
-    std::thread thred2(&m_oneThreadFunc, std::ref(queue), func, std::ref(paramFract), 2, image.height(), image.width());
-
-    thred0.join();
-    thred1.join();
-    thred2.join();
+    RingBuffer<Vector4, BUFSIZE> buffer;
 
     double height = image.height() / 4;
     double width = image.width() / 4;
@@ -451,20 +484,26 @@ void CImage::algoThread(tScene &scene, tPaintParam &param, BaseFunction *func, t
 
     QTime timeStart = QTime::currentTime();
 
-    //TODO threads call
-    int flag = 0;
-    while(flag < 10) {
-        if (queue.empty()) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-            flag++;
-        } else {
-            flag = 0;
-            Vector4 pos = queue.front();
-            queue.pop();
-            setDrawer.setPixel(pos, Color(255));
-        }
+
+    std::thread threadDrawer[THREAD_DRAWER_NUMBER];
+    for(int i = 0; i < THREAD_DRAWER_NUMBER; i++) {
+        threadDrawer[i] = std::thread(&m_oneDrawerFunc, std::ref(buffer), std::ref(setDrawer), i);
     }
 
+    std::thread threadMath[THREAD_MATH_NUMBER];
+    for(int i = 0; i < THREAD_MATH_NUMBER; i++) {
+        threadMath[i] = std::thread(&m_oneThreadFunc, std::ref(buffer), func, std::ref(paramFract), i, image.height(), image.width());
+    }
+
+    for(int i = 0; i < THREAD_MATH_NUMBER; i++) {
+        threadMath[i].join();
+    }
+
+    for(int i = 0; i < THREAD_DRAWER_NUMBER; i++) {
+        threadDrawer[i].join();
+    }
+
+    //TODO threads call
     QTime timePreRender = QTime::currentTime();
 
     image = setDrawer.getImage().scaled(image.width(), image.height());

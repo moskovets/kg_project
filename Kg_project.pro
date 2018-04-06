@@ -63,7 +63,8 @@ HEADERS  += ui/mainwindow.h \
     graphic/drawer3d.h \
     model/model.h \
     graphic/render.h \
-    graphic/setdrawer.h
+    graphic/setdrawer.h \
+    ringbuffer.h
 
 FORMS    += ui/mainwindow.ui \
     ui/mygraphicview.ui \
