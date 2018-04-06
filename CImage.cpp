@@ -104,36 +104,43 @@ void CImage::algo(tScene &scene, tPaintParam &param, BaseFunction *func, tParamF
     double zmin = paramFract.zmin; //-2;
     double zmax = paramFract.zmax; //2;
 
-    double height = image.height();
-    double width = image.width();
+    double height = image.height() / 2;
+    int heightINT = image.height() / 2;
+
+    double width = image.width() / 2;
+    int widthINT = image.width() / 2;
 
 
-    std::shared_ptr<FrameBuffer> fbuf(new FrameBuffer(image.height(), image.width()));
+    std::shared_ptr<FrameBuffer> fbuf(new FrameBuffer(heightINT, widthINT));
 
     Quaternion res;
-    double depth[image.height() + 2][image.width() + 2];
+    double depth[heightINT + 2][widthINT + 2];
 
-    for (int y = 0; y < image.height() + 2; ++y)
+    for (int y = 0; y < heightINT + 2; ++y)
     {
-        double curY = (((2 * double(y) / (height + 2) - 1.0) + 1) * (ymax - ymin) / 2);
-        for (int x = 0; x < image.width() + 2; ++x)
+        //double curY = (((2 * double(y) / (height + 2) - 1.0) + 1) * (ymax - ymin) / 2) + ymin;
+        double curY = ((double(y) / (height + 2)) * (ymax - ymin)) + ymin;
+        for (int x = 0; x < widthINT + 2; ++x)
         {
-            double curX = (((2 * double(x) / (width + 2) - 1.0) + 1) * (xmax - xmin) / 2);
+            //double curX = (((2 * double(x) / (width + 2) - 1.0) + 1) * (xmax - xmin) / 2) + xmin;
+            double curX = ((double(x) / (width + 2)) * (xmax - xmin)) + xmin;
             Quaternion startQ(curX, curY, zmin, 0);
             if (algoSet.findMinSolutionByC(startQ, zmax, res))
-                depth[y][x] = res.c();
+                depth[y][x] = res.c() - zmin;
             else
                 depth[y][x] = 1e10; // TODO big
         }
     }
 
     Vector4 light(1/sqrt(3), 1/sqrt(3), 1/sqrt(3));
-    light = -light;
+    //light = -light;
 
-    for (int y = 1; y < image.height() + 1; ++y)
+    for (int y = 1; y < heightINT + 1; ++y)
     {
-        for (int x = 1; x < image.width() + 1; ++x)
+        for (int x = 1; x < widthINT + 1; ++x)
         {
+            if (depth[y][x] >= 1e10 - 5)
+                continue;
             Vector4 norm(
                             (depth[y][x + 1] - depth[y][x - 1]) * width / (xmax - xmin),
                             (depth[y + 1][x] - depth[y - 1][x]) * height / (ymax - ymin),
@@ -142,12 +149,17 @@ void CImage::algo(tScene &scene, tPaintParam &param, BaseFunction *func, tParamF
             norm.normalize3();
 
             double I = light * norm;
+            //if (I < 0)
+            //    continue;
+            if (I < 0.2)
+                I = 0.2;
             Color c(255 * I);
-            fbuf->getBuffer()->addPixel(x - 1, y - 1, depth[y - 1][x - 1], c);
+            fbuf->getBuffer()->addPixel(x, heightINT - y - 1, depth[y][x], c);
         }
     }
 
     Render render(fbuf);
+    fbuf->swap();
     image = render.getImage().scaled(image.width(), image.height());
     printOnScene(scene);
 }
