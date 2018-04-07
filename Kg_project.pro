@@ -37,7 +37,8 @@ SOURCES += main.cpp\
     model/model.cpp \
     graphic/render.cpp \
     graphic/setdrawer.cpp \
-    graphic/camera.cpp
+    graphic/camera.cpp \
+    graphic/dimension4.cpp
 
 HEADERS  += ui/mainwindow.h \
     ui/mygraphicview.h \
@@ -66,7 +67,8 @@ HEADERS  += ui/mainwindow.h \
     graphic/render.h \
     graphic/setdrawer.h \
     ringbuffer.h \
-    graphic/camera.h
+    graphic/camera.h \
+    graphic/dimension4.h
 
 FORMS    += ui/mainwindow.ui \
     ui/mygraphicview.ui \
