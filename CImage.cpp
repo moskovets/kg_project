@@ -123,10 +123,8 @@ void m_oneMathFunc2(int heightINT, int widthINT, double** depth, BaseFunction *f
 
 
     Quaternion res;
-    int currPoint = 0;
 
-    for (int y = 0; y < heightINT + 2; ++y) {
-        if (currPoint % THREAD_MATH_NUMBER == thredNum) {
+    for (int y = thredNum; y < heightINT + 2; y += THREAD_MATH_NUMBER) {
             double curY = ((double(y) / (height + 2)) * (ymax - ymin)) + ymin;
             for (int x = 0; x < widthINT + 2; ++x) {
                 double curX = ((double(x) / (width + 2)) * (xmax - xmin)) + xmin;
@@ -134,14 +132,13 @@ void m_oneMathFunc2(int heightINT, int widthINT, double** depth, BaseFunction *f
                 if (algoSet.findMinSolutionByC(startQ, zmax, res))
                     depth[y][x] = res.c() - zmin;
                 else
-                    depth[y][x] = 1e10; // TODO big
+                    depth[y][x] = DBL_MAX;
             }
-        }
-        currPoint++;
     }
 
     QTime timeEnd = QTime::currentTime();
-    std::cout << "поток математики " << thredNum << " " << timeStart.msecsTo(timeEnd) << std::endl;
+    QString str = "поток математики " + QString::number(thredNum) + " " + QString::number(timeStart.msecsTo(timeEnd));
+    std::cout << str.toStdString() << std::endl;
 }
 
 void m_oneDrawerFunc2(std::shared_ptr<FrameBuffer> &fbuf, int heightINT, int widthINT, double** depth, tParamFractal &paramFract, int thredNum)
@@ -161,40 +158,38 @@ void m_oneDrawerFunc2(std::shared_ptr<FrameBuffer> &fbuf, int heightINT, int wid
     Vector4 light = camera.lightVector();
     //Color cameraColor = camera.lightColor();
     int currPoint = 1;
-    for (int y = 1; y < heightINT + 1; ++y) {
-        if (currPoint % THREAD_MATH_NUMBER == thredNum) {
-            for (int x = 1; x < widthINT + 1; ++x) {
-                if (depth[y][x] >= 1e10 - 5)
-                    continue;
-                Vector4 norm(
-                            (depth[y][x + 1] - depth[y][x - 1]) * width / (xmax - xmin),
-                            (depth[y + 1][x] - depth[y - 1][x]) * height / (ymax - ymin),
-                            2
-                            );
-                norm.normalize3();
+    for (int y = thredNum + 1; y < heightINT + 1; y += THREAD_DRAWER_NUMBER) {
+        for (int x = 1; x < widthINT + 1; ++x) {
+            if (depth[y][x] >= DBL_MAX - 5)
+                continue;
+            Vector4 norm(
+                        (depth[y][x + 1] - depth[y][x - 1]) * width / (xmax - xmin),
+                        (depth[y + 1][x] - depth[y - 1][x]) * height / (ymax - ymin),
+                        2
+                        );
+            norm.normalize3();
 
-                double I = light * norm;
-                //if (I < 0)
-                //    continue;
-                if (I < 0.2)
-                    I = 0.2;
-                Color c = camera.calculateColor(Color(255), I);
-                fbuf->getBuffer()->addPixel(x, heightINT - y - 1, depth[y][x], c);
-            }
+            double I = light * norm;
+            //if (I < 0)
+            //    continue;
+            if (I < 0.2)
+                I = 0.2;
+            Color c = camera.calculateColor(Color(255), I);
+            fbuf->getBuffer()->addPixel(x, heightINT - y - 1, depth[y][x], c);
         }
         currPoint++;
     }
     QTime timeEnd = QTime::currentTime();
-    std::cout << "поток отрисовщика " << thredNum << " " << timeStart.msecsTo(timeEnd) << std::endl;
-
+    QString str = "поток отрисовщика " + QString::number(thredNum) + " " + QString::number(timeStart.msecsTo(timeEnd));
+    std::cout << str.toStdString() << std::endl;
 }
 
 void CImage::algoThread2(tScene &scene, tPaintParam &param, BaseFunction *func, tParamFractal &paramFract)
 {
 
-    int heightINT = image.height() / 2;
+    int heightINT = image.height();
 
-    int widthINT = image.width() / 2;
+    int widthINT = image.width();
 
     std::shared_ptr<FrameBuffer> fbuf(new FrameBuffer(heightINT, widthINT));
     double** depth;
@@ -210,29 +205,25 @@ void CImage::algoThread2(tScene &scene, tPaintParam &param, BaseFunction *func, 
         threadMath[i] = std::thread(&m_oneMathFunc2, heightINT, widthINT, depth, func, std::ref(paramFract), i);
     }
     for(int i = 0; i < THREAD_MATH_NUMBER; i++) {
-        threadMath[i].join();
+        if (threadMath[i].joinable())
+            threadMath[i].join();
     }
+
     std::cout << "start drawing\n";
     std::thread threadDrawer[THREAD_DRAWER_NUMBER];
     for(int i = 0; i < THREAD_DRAWER_NUMBER; i++) {
         threadDrawer[i] = std::thread(&m_oneDrawerFunc2, std::ref(fbuf), heightINT, widthINT, depth, std::ref(paramFract), i);
     }
-
     for(int i = 0; i < THREAD_DRAWER_NUMBER; i++) {
-        threadDrawer[i].join();
+        if (threadDrawer[i].joinable())
+            threadDrawer[i].join();
     }
-
-    //TODO threads call
-    QTime timePreRender = QTime::currentTime();
 
     Render render(fbuf);
     fbuf->swap();
     image = render.getImage().scaled(image.width(), image.height());
 
-    QTime timeEnd = QTime::currentTime();
-
-    std::cout << "общее время " << timeStart.msecsTo(timeEnd) << std::endl;
-    std::cout << "время до рендеринга " << timeStart.msecsTo(timePreRender) << std::endl;
+    std::cout << "общее время " << timeStart.msecsTo(QTime::currentTime()) << std::endl;
 
     printOnScene(scene);
 }
