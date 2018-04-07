@@ -190,10 +190,8 @@ void m_oneDrawerFunc2(std::shared_ptr<FrameBuffer> &fbuf, int heightINT, int wid
 void CImage::algoThread2(tScene &scene, tPaintParam &param, BaseFunction *func, tParamFractal &paramFract)
 {
 
-    double height = image.height() / 2;
     int heightINT = image.height() / 2;
 
-    double width = image.width() / 2;
     int widthINT = image.width() / 2;
 
     std::shared_ptr<FrameBuffer> fbuf(new FrameBuffer(heightINT, widthINT));

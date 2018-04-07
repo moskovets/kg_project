@@ -5,6 +5,7 @@
 #include "../model/triangle.h"
 #include "../model/model.h"
 #include "../math/matrix4.h"
+#include "camera.h"
 
 #include <memory>
 
@@ -24,9 +25,7 @@ class Drawer3D
 
     DrawerModeEnum m_mode;
 
-    Vector4 m_lightVector;
-
-    Color m_lightColor;
+    Camera  m_camera;
 
     Matrix4 m_projectingMatr;
 
@@ -45,11 +44,13 @@ private:
 
 public:
     Drawer3D(std::shared_ptr <FrameBuffer> &frame, DrawerModeEnum mode = DME_FLAT,
-             Vector4 lightVector = Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)),  Color lightColor = Color());
+             const Camera &camera = Camera(Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)), Color()));
 
     void swap();
 
     void setMode(DrawerModeEnum mode);
+
+    void rotateCamera(double xAngle = 0, double yAngle = 0, double zAngle = 0);
 
     void drawModel(const Model &model);
 

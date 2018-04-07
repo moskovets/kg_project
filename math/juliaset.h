@@ -11,9 +11,9 @@
 class JuliaSet
 {
 private:
+    BaseFunction *m_function;
     double        m_radius;
     unsigned int  m_maxIter;
-    BaseFunction *m_function;
 
 public:
     JuliaSet(BaseFunction *f, double r = 1000, unsigned int max_iter = 50);

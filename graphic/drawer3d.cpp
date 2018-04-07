@@ -3,12 +3,12 @@
 
 Vector4 Drawer3D::lightVector() const
 {
-    return m_lightVector;
+    return m_camera.lightVector();
 }
 
 void Drawer3D::setLightVector(const Vector4 &lightVector)
 {
-    m_lightVector = lightVector.norm3();
+    m_camera.setLightVector(lightVector.norm3());
 }
 
 Matrix4 Drawer3D::projectingMatr() const
@@ -23,7 +23,7 @@ void Drawer3D::setProjectingMatr(const Matrix4 &projectingMatr)
 
 double Drawer3D::m_intensity(const Vector4 &normal) const
 {
-    double res = (-normal) * m_lightVector;
+    double res = (-normal) * m_camera.lightVector();
     if(res > 0.1) {
         return res;
     }
@@ -36,9 +36,10 @@ Color Drawer3D::m_calculateColor(const Color &color, double inten) const
     double c1 = 1 - (double) color.r() / 255;
     double m1 = 1 - (double) color.g() / 255;
     double y1 = 1 - (double) color.b() / 255;
-    double c2 = 1 - (double) m_lightColor.r() / 255;
-    double m2 = 1 - (double) m_lightColor.g() / 255;
-    double y2 = 1 - (double) m_lightColor.b() / 255;
+    Color lightColor = m_camera.lightColor();
+    double c2 = 1 - (double) lightColor.r() / 255;
+    double m2 = 1 - (double) lightColor.g() / 255;
+    double y2 = 1 - (double) lightColor.b() / 255;
     col.setR(col.r() * inten);
     col.setG(col.g() * inten);
     col.setB(col.b() * inten);
@@ -268,8 +269,8 @@ void Drawer3D::m_drawTriangle(const Triangle &triangle, const Color &color)
 
 }
 
-Drawer3D::Drawer3D(std::shared_ptr<FrameBuffer> &frame, DrawerModeEnum mode, Vector4 lightVector, Color lightColor) :
-    m_frame(frame), m_mode(mode), m_lightVector(lightVector), m_lightColor(lightColor)
+Drawer3D::Drawer3D(std::shared_ptr<FrameBuffer> &frame, DrawerModeEnum mode, const Camera &camera) :
+    m_frame(frame), m_mode(mode), m_camera(camera)
 {
     //m_projectingMatr = Matrix4::createPerspectiveMatrix(0.1, 1000, (double) frame->getBuffer()->width() / frame->getBuffer()->height(), M_PI_2);
     m_projectingMatr = Matrix4::createDiagMatrix(1);
@@ -283,6 +284,12 @@ void Drawer3D::swap()
 void Drawer3D::setMode(DrawerModeEnum mode)
 {
     m_mode = mode;
+}
+
+void Drawer3D::rotateCamera(double xAngle, double yAngle, double zAngle)
+{
+    m_camera.rotate(xAngle, yAngle, zAngle);
+    //TODO перерисовку
 }
 
 void Drawer3D::drawModel(const Model &model)

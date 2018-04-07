@@ -1,10 +1,10 @@
 #include "setdrawer.h"
 
 
-SetDrawer::SetDrawer(uint32_t h, uint32_t w, unsigned xnum, unsigned ynum, double radius, Vector4 lightVector)
+SetDrawer::SetDrawer(uint32_t h, uint32_t w, unsigned xnum, unsigned ynum, double radius, const Camera &camera)
 {
     std::shared_ptr<FrameBuffer> frame(new FrameBuffer(h, w));
-    m_drawer = new Drawer3D(frame, DME_GURO, lightVector);
+    m_drawer = new Drawer3D(frame, DME_GURO, camera);
     m_render = new Render(frame);
     m_mesh = new Mesh();
     m_mesh->addSphere(xnum, ynum, radius);
@@ -21,6 +21,11 @@ SetDrawer::~SetDrawer()
     m_mesh = nullptr;
     m_render = nullptr;
     m_drawer = nullptr;
+}
+
+void SetDrawer::rotateCamera(double xAngle, double yAngle, double zAngle)
+{
+    m_drawer->rotateCamera(xAngle, yAngle, zAngle);
 }
 
 void SetDrawer::setPixel(const Vector4 &position, const Color &color)

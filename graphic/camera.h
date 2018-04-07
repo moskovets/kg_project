@@ -13,14 +13,9 @@ class Camera
     Color m_lightColor;
 
 public:
-    Camera(const Vector4 &vector = Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)),  const Color &color = Color()) :
-        m_lightVector(vector), m_lightColor(color)
-    {}
+    Camera(const Vector4 &vector = Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)),  const Color &color = Color());
 
-    void rotate(double xAngle = 0, double yAngle = 0, double zAngle = 0)
-    {
-        m_lightVector = Matrix4::rotateVector(m_lightVector, xAngle, yAngle, zAngle);
-    }
+    void rotate(double xAngle = 0, double yAngle = 0, double zAngle = 0);
 
     Vector4 lightVector() const;
     void setLightVector(const Vector4 &lightVector);
