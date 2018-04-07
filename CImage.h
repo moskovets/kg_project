@@ -23,6 +23,11 @@ struct tParamFractal {
     double zmax;
     double r;
     int maxIter;
+
+    double xAngle;
+    double yAngle;
+    double zAngle;
+
 };
 
 struct tPaintParam {

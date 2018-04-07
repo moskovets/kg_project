@@ -32,6 +32,10 @@ MyController::MyController(QWidget *parent) :
     ui->cEdit->setValidator(ValidatorDouble);
     ui->dEdit->setValidator(ValidatorDouble);
 
+    ui->xAngleEdit->setValidator(ValidatorDouble);
+    ui->yAngleEdit->setValidator(ValidatorDouble);
+    ui->zAngleEdit->setValidator(ValidatorDouble);
+
     ui->xminEdit->setValidator(ValidatorDouble);
     ui->yminEdit->setValidator(ValidatorDouble);
     ui->zminEdit->setValidator(ValidatorDouble);
@@ -208,6 +212,9 @@ void MyController::on_drawButton_clicked()
     edits.push_back(ui->rEdit);
     edits.push_back(ui->maxIterEdit);
 
+    edits.push_back(ui->xAngleEdit);
+    edits.push_back(ui->yAngleEdit);
+    edits.push_back(ui->zAngleEdit);
 
     double *arr = GetData(edits);
 
@@ -226,7 +233,10 @@ void MyController::on_drawButton_clicked()
         arr[9],
 
         arr[10],
-        (int)arr[11]
+        (int)arr[11],
+        arr[12],
+        arr[13],
+        arr[14]
     };
 
     //image.algo(scene, this->data, func, param);
