@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QDebug>
 #include <math.h>
+#include "graphic/dimension4.h"
 #define EPS 0.1
 #define SIGN(x) ((int) (x > 0) - (x < 0))
 
