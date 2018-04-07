@@ -5,10 +5,14 @@
 #include "errors.h"
 #include "point.h"
 #include <vector>
+#include "ringbuffer.h"
+#include "graphic/setdrawer.h"
+#include <memory>
 using namespace std;
 
 #include "juliafunctions.h"
 
+#define BUFSIZE 10000
 
 struct tParamFractal {
     double xmin;
@@ -59,8 +63,16 @@ public:
 
         void algo(tScene &scene, tPaintParam &param, BaseFunction* func, tParamFractal &paramFract);
         void algoThread(tScene &scene, tPaintParam &param, BaseFunction* func, tParamFractal &paramFract);
+        void algoThread2(tScene &scene, tPaintParam &param, BaseFunction* func, tParamFractal &paramFract);
 
         static std::queue<Vector4> m_queue;
 };
+
+void m_oneMathFunc2(int heightINT, int widthINT, double** depth, BaseFunction *func, tParamFractal &paramFract, int thredNum);
+void m_oneDrawerFunc2(std::shared_ptr<FrameBuffer> &fbuf, int heightINT, int widthINT, double** depth, tParamFractal &paramFract, int thredNum);
+void m_oneThreadFunc(RingBuffer<Vector4, BUFSIZE> &buff, BaseFunction *func, tParamFractal &paramFract, int thredNum, double height, double width);
+void m_oneDrawerFunc(RingBuffer<Vector4, BUFSIZE> &buff,  SetDrawer &setDrawer, int thredNum);
+
+
 
 #endif // CIMAGE_H

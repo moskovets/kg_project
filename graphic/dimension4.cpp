@@ -120,7 +120,7 @@ QColor Dimension4::m_getQColorByLen(double len)
 
 
 
-
+/*
 
 
     //return;
@@ -133,7 +133,7 @@ QColor Dimension4::m_getQColorByLen(double len)
     double z = 2.060 * exp(
                 -32 * pow(log((len - 265.8) / 180.4), 2));
 
-
+*/
     //XYZ->RGB
     //double r = x *  3.2406 + y * -1.5372 + z * -0.4986;
     //double g = x * -0.9689 + y *  1.8758 + z *  0.0415;
