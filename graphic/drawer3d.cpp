@@ -30,21 +30,6 @@ double Drawer3D::m_intensity(const Vector4 &normal) const
     return 0.1;
 }
 
-Color Drawer3D::m_calculateColor(const Color &color, double inten) const
-{
-    Color col = color;
-    double c1 = 1 - (double) color.r() / 255;
-    double m1 = 1 - (double) color.g() / 255;
-    double y1 = 1 - (double) color.b() / 255;
-    Color lightColor = m_camera.lightColor();
-    double c2 = 1 - (double) lightColor.r() / 255;
-    double m2 = 1 - (double) lightColor.g() / 255;
-    double y2 = 1 - (double) lightColor.b() / 255;
-    col.setR(col.r() * inten);
-    col.setG(col.g() * inten);
-    col.setB(col.b() * inten);
-    return col;
-}
 
 /*
 void Drawer3D::m_drawFlatTriangle(const Triangle &triangle, const Color &color)
@@ -136,7 +121,7 @@ void Drawer3D::m_drawGuroTriangle(const Triangle &triangle, const Color &color)
                 Vector4 normal = interpolate(n02, n12, (y - y02) / (y12 - y02));
 
                 double inten = m_intensity(normal);
-                Color c =  m_calculateColor(color, inten);
+                Color c =  m_camera.calculateColor(color, inten);
 
                 m_frame->getBuffer()->addPixel(x, round(y), z, c);
             }
@@ -151,7 +136,7 @@ void Drawer3D::m_drawFlatTriangle(const Triangle &triangle, const Color &color)
     Vector4 normal = triangle.getAverageNormal();
 
     double inten = m_intensity(normal);
-    Color c = m_calculateColor(color, inten);
+    Color c = m_camera.calculateColor(color, inten);
 
     for(int x = round(triangle.getVertex(2).x()); x * dx <= round(triangle.getVertex(0).x()) * dx; x += dx) {
         int y02 = round(interpolate(round(triangle.getVertex(0).x()), round(triangle.getVertex(0).y()),

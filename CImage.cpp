@@ -19,7 +19,7 @@
 #include "graphic/dimension4.h"
 #include "graphic/drawer3d.h"
 #include "graphic/render.h"
-
+#include "graphic/camera.h"
 
 
 #define THREAD_MATH_NUMBER   4
@@ -157,7 +157,9 @@ void m_oneDrawerFunc2(std::shared_ptr<FrameBuffer> &fbuf, int heightINT, int wid
     double ymin = paramFract.ymin; //-1;
     double ymax = paramFract.ymax; //1;
 
-    Vector4 light(1/sqrt(3), 1/sqrt(3), 1/sqrt(3));
+    Camera camera(Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)), Color(255));
+    Vector4 light = camera.lightVector();
+    //Color cameraColor = camera.lightColor();
     int currPoint = 1;
     for (int y = 1; y < heightINT + 1; ++y) {
         if (currPoint % THREAD_MATH_NUMBER == thredNum) {
@@ -176,7 +178,7 @@ void m_oneDrawerFunc2(std::shared_ptr<FrameBuffer> &fbuf, int heightINT, int wid
                 //    continue;
                 if (I < 0.2)
                     I = 0.2;
-                Color c(255 * I);
+                Color c = camera.calculateColor(Color(255), I);
                 fbuf->getBuffer()->addPixel(x, heightINT - y - 1, depth[y][x], c);
             }
         }
@@ -440,7 +442,7 @@ void m_oneDrawerFunc(RingBuffer<Vector4, BUFSIZE> &buff,  SetDrawer &setDrawer, 
             popCount++;
             if(popCount % 1000 == 0)
                 std::cout << "drawing " << popCount << " points\n";
-            setDrawer.setPixel(pos, Color(255));
+            setDrawer.setPixel(pos, Color(255, 255, 255));
         }
     }
 }
@@ -452,14 +454,15 @@ void CImage::algoThread(tScene &scene, tPaintParam &param, BaseFunction *func, t
     double height = image.height() / 4;
     double width = image.width() / 4;
 
-    SetDrawer setDrawer(height, width, 20, 20, 0.01);
+    SetDrawer setDrawer(height, width, 20, 20, 0.01, Camera(Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)), Color(255)));
+    /*
     {
         setDrawer.setPixel(Vector4(0, 0, 2), Color(0, 255));
         image = setDrawer.getImage().scaled(image.width(), image.height());
         printOnScene(scene);
     }
     return;
-
+    */
     QTime timeStart = QTime::currentTime();
 
 

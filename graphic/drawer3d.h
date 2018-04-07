@@ -32,8 +32,6 @@ class Drawer3D
 private:
     double m_intensity(const Vector4 &normal) const;
 
-    Color m_calculateColor(const Color &modelColor, double inten) const;
-
     void m_drawFlatTriangle(const Triangle &triangle, const Color &color = Color());
 
     void m_drawGuroTriangle(const Triangle &triangle, const Color &color = Color());
@@ -44,7 +42,7 @@ private:
 
 public:
     Drawer3D(std::shared_ptr <FrameBuffer> &frame, DrawerModeEnum mode = DME_FLAT,
-             const Camera &camera = Camera(Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)), Color()));
+             const Camera &camera = Camera(Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)), Color(255, 255, 255)));
 
     void swap();
 
