@@ -28,6 +28,8 @@ struct tParamFractal {
     double yAngle;
     double zAngle;
 
+    Vector4 lightVector;
+    Color   lightColor;
 };
 
 struct tPaintParam {

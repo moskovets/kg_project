@@ -36,6 +36,10 @@ MyController::MyController(QWidget *parent) :
     ui->yAngleEdit->setValidator(ValidatorDouble);
     ui->zAngleEdit->setValidator(ValidatorDouble);
 
+    ui->xLightEdit->setValidator(ValidatorDouble);
+    ui->yLightEdit->setValidator(ValidatorDouble);
+    ui->zLightEdit->setValidator(ValidatorDouble);
+
     ui->xminEdit->setValidator(ValidatorDouble);
     ui->yminEdit->setValidator(ValidatorDouble);
     ui->zminEdit->setValidator(ValidatorDouble);
@@ -64,9 +68,9 @@ MyController::MyController(QWidget *parent) :
     ui->zmaxEdit->setText("2");
 
     //TODO
-    data.fon = QColor(255, 255, 255); //фон черный
-    data.color = QColor(0, 0, 0); //цвет наблюдателя
-    colorLine = data.color;
+    //data.fon = QColor(255, 255, 255); //фон черный
+    //data.color = QColor(0, 0, 0); //цвет наблюдателя
+    //colorLine = data.color;
     data.sizePixel = 1;
 
 
@@ -165,15 +169,16 @@ QString MyController::GetColor(QColor &color)
     return res;
 }
 
-void MyController::on_foncolorButton_clicked()
+void MyController::on_lightcolorButton_clicked()
 {
     QColor color = QColorDialog::getColor(Qt::black);
     if (!color.isValid() ) {
      return;
     }
-    ui->fonlabel->setStyleSheet("background-color: " + GetColor(color));
-    data.fon = color;
-    image.changeFon(scene, data.fon);
+    ui->lightlabel->setStyleSheet("background-color: " + GetColor(color));
+    //data.fon = color;
+    m_lightColor = Color(color.red(), color.green(), color.blue());
+    //image.changeFon(scene, color);
 }
 
 
@@ -216,6 +221,10 @@ void MyController::on_drawButton_clicked()
     edits.push_back(ui->yAngleEdit);
     edits.push_back(ui->zAngleEdit);
 
+    edits.push_back(ui->xLightEdit);
+    edits.push_back(ui->yLightEdit);
+    edits.push_back(ui->zLightEdit);
+
     double *arr = GetData(edits);
 
     if(LineEditError != NO_ER)
@@ -224,6 +233,8 @@ void MyController::on_drawButton_clicked()
     Quaternion c(arr[0], arr[1], arr[2], arr[3]);
     BaseFunction* func = getFunction(c);
 
+
+    Vector4 lightVector(arr[15], arr[16], arr[17]);
     tParamFractal param = {
         arr[4],
         arr[5],
@@ -236,7 +247,9 @@ void MyController::on_drawButton_clicked()
         (int)arr[11],
         arr[12],
         arr[13],
-        arr[14]
+        arr[14],
+        lightVector.norm3(),
+        m_lightColor
     };
 
     //image.algo(scene, this->data, func, param);

@@ -39,7 +39,7 @@ signals:
 private slots:
 
 
-    void on_foncolorButton_clicked();
+    void on_lightcolorButton_clicked();
 
     void on_visorcolorButton_clicked();
 
@@ -60,6 +60,8 @@ private:
     QColor colorLine;
     QRegExpValidator *ValidatorDouble;
     QIntValidator *Validator;
+
+    Color m_lightColor;
 
 };
 
