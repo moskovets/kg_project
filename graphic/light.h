@@ -1,19 +1,19 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#ifndef LIGHT_H
+#define LIGHT_H
 
 #include "math/vector4.h"
 #include "color.h"
 #include "math/matrix4.h"
 
 
-class Camera
+class Light
 {
     Vector4 m_lightVector;
 
     Color m_lightColor;
 
 public:
-    Camera(const Vector4 &vector = Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)),  const Color &color = Color(255, 255, 255));
+    Light(const Vector4 &vector = Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)),  const Color &color = Color(255, 255, 255));
 
     void rotate(double xAngle = 0, double yAngle = 0, double zAngle = 0);
 
@@ -25,4 +25,4 @@ public:
     Color calculateColor(const Color &modelColor, double inten) const;
 };
 
-#endif // CAMERA_H
+#endif // LIGHT_H

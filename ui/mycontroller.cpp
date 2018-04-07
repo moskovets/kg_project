@@ -32,14 +32,6 @@ MyController::MyController(QWidget *parent) :
     ui->cEdit->setValidator(ValidatorDouble);
     ui->dEdit->setValidator(ValidatorDouble);
 
-    ui->xAngleEdit->setValidator(ValidatorDouble);
-    ui->yAngleEdit->setValidator(ValidatorDouble);
-    ui->zAngleEdit->setValidator(ValidatorDouble);
-
-    ui->xLightEdit->setValidator(ValidatorDouble);
-    ui->yLightEdit->setValidator(ValidatorDouble);
-    ui->zLightEdit->setValidator(ValidatorDouble);
-
     ui->xminEdit->setValidator(ValidatorDouble);
     ui->yminEdit->setValidator(ValidatorDouble);
     ui->zminEdit->setValidator(ValidatorDouble);
@@ -50,6 +42,14 @@ MyController::MyController(QWidget *parent) :
     ui->rEdit->setValidator(ValidatorDouble);
 
     ui->maxIterEdit->setValidator(Validator);
+
+    ui->xAngleEdit->setValidator(ValidatorDouble);
+    ui->yAngleEdit->setValidator(ValidatorDouble);
+    ui->zAngleEdit->setValidator(ValidatorDouble);
+
+    ui->xLightEdit->setValidator(ValidatorDouble);
+    ui->yLightEdit->setValidator(ValidatorDouble);
+    ui->zLightEdit->setValidator(ValidatorDouble);
 
     //установка значений по умолчанию
     ui->aEdit->setText("-0.65");
@@ -67,7 +67,12 @@ MyController::MyController(QWidget *parent) :
     ui->zminEdit->setText("-2");
     ui->zmaxEdit->setText("2");
 
+    ui->xLightEdit->setText(QString::number(1/sqrt(3)));
+    ui->yLightEdit->setText(QString::number(1/sqrt(3)));
+    ui->zLightEdit->setText(QString::number(1/sqrt(3)));
+
     //TODO
+    m_lightColor = Color(255, 255, 255);
     //data.fon = QColor(255, 255, 255); //фон черный
     //data.color = QColor(0, 0, 0); //цвет наблюдателя
     //colorLine = data.color;

@@ -3,12 +3,12 @@
 
 Vector4 Drawer3D::lightVector() const
 {
-    return m_camera.lightVector();
+    return m_light.lightVector();
 }
 
 void Drawer3D::setLightVector(const Vector4 &lightVector)
 {
-    m_camera.setLightVector(lightVector.norm3());
+    m_light.setLightVector(lightVector.norm3());
 }
 
 Matrix4 Drawer3D::projectingMatr() const
@@ -23,7 +23,7 @@ void Drawer3D::setProjectingMatr(const Matrix4 &projectingMatr)
 
 double Drawer3D::m_intensity(const Vector4 &normal) const
 {
-    double res = (-normal) * m_camera.lightVector();
+    double res = (-normal) * m_light.lightVector();
     if(res > 0.1) {
         return res;
     }
@@ -121,7 +121,7 @@ void Drawer3D::m_drawGuroTriangle(const Triangle &triangle, const Color &color)
                 Vector4 normal = interpolate(n02, n12, (y - y02) / (y12 - y02));
 
                 double inten = m_intensity(normal);
-                Color c =  m_camera.calculateColor(color, inten);
+                Color c =  m_light.calculateColor(color, inten);
 
                 m_frame->getBuffer()->addPixel(x, round(y), z, c);
             }
@@ -136,7 +136,7 @@ void Drawer3D::m_drawFlatTriangle(const Triangle &triangle, const Color &color)
     Vector4 normal = triangle.getAverageNormal();
 
     double inten = m_intensity(normal);
-    Color c = m_camera.calculateColor(color, inten);
+    Color c = m_light.calculateColor(color, inten);
 
     for(int x = round(triangle.getVertex(2).x()); x * dx <= round(triangle.getVertex(0).x()) * dx; x += dx) {
         int y02 = round(interpolate(round(triangle.getVertex(0).x()), round(triangle.getVertex(0).y()),
@@ -254,8 +254,8 @@ void Drawer3D::m_drawTriangle(const Triangle &triangle, const Color &color)
 
 }
 
-Drawer3D::Drawer3D(std::shared_ptr<FrameBuffer> &frame, DrawerModeEnum mode, const Camera &camera) :
-    m_frame(frame), m_mode(mode), m_camera(camera)
+Drawer3D::Drawer3D(std::shared_ptr<FrameBuffer> &frame, DrawerModeEnum mode, const Light &light) :
+    m_frame(frame), m_mode(mode), m_light(light)
 {
     //m_projectingMatr = Matrix4::createPerspectiveMatrix(0.1, 1000, (double) frame->getBuffer()->width() / frame->getBuffer()->height(), M_PI_2);
     m_projectingMatr = Matrix4::createDiagMatrix(1);
@@ -271,9 +271,9 @@ void Drawer3D::setMode(DrawerModeEnum mode)
     m_mode = mode;
 }
 
-void Drawer3D::rotateCamera(double xAngle, double yAngle, double zAngle)
+void Drawer3D::rotateLight(double xAngle, double yAngle, double zAngle)
 {
-    m_camera.rotate(xAngle, yAngle, zAngle);
+    m_light.rotate(xAngle, yAngle, zAngle);
     //TODO перерисовку
 }
 

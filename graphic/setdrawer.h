@@ -4,7 +4,7 @@
 #include "drawer3d.h"
 #include "render.h"
 #include "../model/mesh.h"
-#include "camera.h"
+#include "light.h"
 
 class SetDrawer
 {
@@ -14,11 +14,11 @@ class SetDrawer
     Model        m_model;
 public:
     SetDrawer(uint32_t h, uint32_t w, unsigned xnum = 10, unsigned ynum = 10, double radius = 1,
-              const Camera &camera = Camera(Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)), Color(255, 255, 255)));
+              const Light &light = Light(Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)), Color(255, 255, 255)));
 
     ~SetDrawer();
 
-    void rotateCamera(double xAngle = 0, double yAngle = 0, double zAngle = 0);
+    void rotateLight(double xAngle = 0, double yAngle = 0, double zAngle = 0);
 
     void setPixel(const Vector4 &position, const Color &color = Color(0,255));
 

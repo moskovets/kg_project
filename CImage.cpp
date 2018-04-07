@@ -19,7 +19,7 @@
 #include "graphic/dimension4.h"
 #include "graphic/drawer3d.h"
 #include "graphic/render.h"
-#include "graphic/camera.h"
+#include "graphic/light.h"
 
 
 #define THREAD_MATH_NUMBER   4
@@ -154,9 +154,9 @@ void m_oneDrawerFunc2(std::shared_ptr<FrameBuffer> &fbuf, int heightINT, int wid
     double ymin = paramFract.ymin; //-1;
     double ymax = paramFract.ymax; //1;
 
-    Camera camera(Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)), Color(255));
-    Vector4 light = camera.lightVector();
-    //Color cameraColor = camera.lightColor();
+    Light light(paramFract.lightVector, paramFract.lightColor);
+    Vector4 lightV = light.lightVector();
+    //Color lightColor = light.lightColor();
     int currPoint = 1;
     for (int y = thredNum + 1; y < heightINT + 1; y += THREAD_DRAWER_NUMBER) {
         for (int x = 1; x < widthINT + 1; ++x) {
@@ -169,12 +169,12 @@ void m_oneDrawerFunc2(std::shared_ptr<FrameBuffer> &fbuf, int heightINT, int wid
                         );
             norm.normalize3();
 
-            double I = light * norm;
+            double I = lightV * norm;
             //if (I < 0)
             //    continue;
             if (I < 0.2)
                 I = 0.2;
-            Color c = camera.calculateColor(Color(255), I);
+            Color c = light.calculateColor(Color(255), I);
             fbuf->getBuffer()->addPixel(x, heightINT - y - 1, depth[y][x], c);
         }
         currPoint++;
@@ -187,9 +187,9 @@ void m_oneDrawerFunc2(std::shared_ptr<FrameBuffer> &fbuf, int heightINT, int wid
 void CImage::algoThread2(tScene &scene, tPaintParam &param, BaseFunction *func, tParamFractal &paramFract)
 {
 
-    int heightINT = image.height();
+    int heightINT = image.height() / 4;
 
-    int widthINT = image.width();
+    int widthINT = image.width() / 4;
 
     std::shared_ptr<FrameBuffer> fbuf(new FrameBuffer(heightINT, widthINT));
     double** depth;
@@ -445,7 +445,7 @@ void CImage::algoThread(tScene &scene, tPaintParam &param, BaseFunction *func, t
     double height = image.height() / 4;
     double width = image.width() / 4;
 
-    SetDrawer setDrawer(height, width, 20, 20, 0.01, Camera(Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)), Color(255)));
+    SetDrawer setDrawer(height, width, 20, 20, 0.01, Light(paramFract.lightVector, paramFract.lightColor));
     /*
     {
         setDrawer.setPixel(Vector4(0, 0, 2), Color(0, 255));
