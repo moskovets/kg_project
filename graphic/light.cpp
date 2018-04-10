@@ -23,7 +23,7 @@ Color Light::calculateColor(const Color &modelColor, double inten) const
     double g1 = (double) modelColor.g() / 255;
     double b1 = (double) modelColor.b() / 255;
 
-    double a2 = (double) m_lightColor.alpha() / 255;
+    double a2 = inten; // (double) m_lightColor.alpha() / 255
     double r2 = (double) m_lightColor.r() / 255;
     double g2 = (double) m_lightColor.g() / 255;
     double b2 = (double) m_lightColor.b() / 255;
@@ -38,6 +38,7 @@ Color Light::calculateColor(const Color &modelColor, double inten) const
     col.setR(col.r() * inten);
     col.setG(col.g() * inten);
     col.setB(col.b() * inten);
+    col.setAlpha(col.alpha() * 255);
     return col;
 
 }

@@ -101,7 +101,7 @@ void CImage::changeScale(tScene &scene, int sizepixel)
     printOnScene(scene);
 }
 
-void m_oneMathFunc2(int heightINT, int widthINT, double** depth, BaseFunction *func, tParamFractal &paramFract, int thredNum)
+void m_oneMathFunc2(int heightINT, int widthINT, double** depth, BaseFunction *func, tParamFractal &paramFract, int thredNum, double **color)
 {
     QTime timeStart = QTime::currentTime();
 
@@ -121,18 +121,33 @@ void m_oneMathFunc2(int heightINT, int widthINT, double** depth, BaseFunction *f
     double height = heightINT;
     double width  = widthINT;
 
-
     Quaternion res;
+    double h = 0.1;
+    double Zmin = DBL_MAX;
 
     for (int y = thredNum; y < heightINT + 2; y += THREAD_MATH_NUMBER) {
             double curY = ((double(y) / (height + 2)) * (ymax - ymin)) + ymin;
             for (int x = 0; x < widthINT + 2; ++x) {
                 double curX = ((double(x) / (width + 2)) * (xmax - xmin)) + xmin;
-                Quaternion startQ(curX, curY, zmin, 0);
-                if (algoSet.findMinSolutionByC(startQ, zmax, res))
-                    depth[y][x] = res.c() - zmin;
-                else
-                    depth[y][x] = DBL_MAX;
+
+                Zmin = DBL_MAX;
+                depth[y][x] = DBL_MAX;
+                color[y][x] = 1;
+                for (double d = 0.0; d < 1.0 + h / 2; d += h)
+                {
+                    Quaternion startQ(curX, curY, zmin, d);
+
+                    if (algoSet.findMinSolutionByC(startQ, zmax, res))
+                    {
+                        if (res.c() < Zmin)
+                        {
+                            depth[y][x] = res.c() - zmin;
+                            //std::cout << depth[y][x] << std::endl;
+                            Zmin = res.c();
+                            color[y][x] = d;
+                        }
+                    }
+                }
             }
     }
 
@@ -141,7 +156,7 @@ void m_oneMathFunc2(int heightINT, int widthINT, double** depth, BaseFunction *f
     std::cout << str.toStdString() << std::endl;
 }
 
-void m_oneDrawerFunc2(std::shared_ptr<FrameBuffer> &fbuf, int heightINT, int widthINT, double** depth, tParamFractal &paramFract, int thredNum)
+void m_oneDrawerFunc2(std::shared_ptr<FrameBuffer> &fbuf, int heightINT, int widthINT, double** depth, tParamFractal &paramFract, int thredNum, double** color)
 {
     QTime timeStart = QTime::currentTime();
 
@@ -156,6 +171,7 @@ void m_oneDrawerFunc2(std::shared_ptr<FrameBuffer> &fbuf, int heightINT, int wid
 
     Light light(paramFract.lightVector, paramFract.lightColor);
     Vector4 lightV = light.lightVector();
+    Dimension4 dim;
     //Color lightColor = light.lightColor();
     int currPoint = 1;
     for (int y = thredNum + 1; y < heightINT + 1; y += THREAD_DRAWER_NUMBER) {
@@ -174,8 +190,10 @@ void m_oneDrawerFunc2(std::shared_ptr<FrameBuffer> &fbuf, int heightINT, int wid
             //    continue;
             if (I < 0.2)
                 I = 0.2;
-            Color c = light.calculateColor(Color(255), I);
-            fbuf->getBuffer()->addPixel(x, heightINT - y - 1, depth[y][x], c);
+            Color fcolor = dim.getColorForNormCoord(color[y][x]);
+            //std::cout << color[y][x] << std::endl;
+            Color c = light.calculateColor(fcolor, I);
+            fbuf->getBuffer()->addPixel(x, heightINT - y - 1, depth[y][x], fcolor); // fcolor -> c   for real
         }
         currPoint++;
     }
@@ -187,9 +205,9 @@ void m_oneDrawerFunc2(std::shared_ptr<FrameBuffer> &fbuf, int heightINT, int wid
 void CImage::algoThread2(tScene &scene, tPaintParam &param, BaseFunction *func, tParamFractal &paramFract)
 {
 
-    int heightINT = image.height() / 4;
+    int heightINT = image.height();
 
-    int widthINT = image.width() / 4;
+    int widthINT = image.width();
 
     std::shared_ptr<FrameBuffer> fbuf(new FrameBuffer(heightINT, widthINT));
     double** depth;
@@ -198,11 +216,16 @@ void CImage::algoThread2(tScene &scene, tPaintParam &param, BaseFunction *func, 
         depth[i] = new double [widthINT + 2];
     }
 
+    double** color;
+    color = new double * [heightINT + 2];
+    for (auto i = 0; i < heightINT + 2; ++i)
+        color[i] = new double[widthINT + 2];
+
     QTime timeStart = QTime::currentTime();
 
     std::thread threadMath[THREAD_MATH_NUMBER];
     for(int i = 0; i < THREAD_MATH_NUMBER; i++) {
-        threadMath[i] = std::thread(&m_oneMathFunc2, heightINT, widthINT, depth, func, std::ref(paramFract), i);
+        threadMath[i] = std::thread(&m_oneMathFunc2, heightINT, widthINT, depth, func, std::ref(paramFract), i, color);
     }
     for(int i = 0; i < THREAD_MATH_NUMBER; i++) {
         if (threadMath[i].joinable())
@@ -212,7 +235,7 @@ void CImage::algoThread2(tScene &scene, tPaintParam &param, BaseFunction *func, 
     std::cout << "start drawing\n";
     std::thread threadDrawer[THREAD_DRAWER_NUMBER];
     for(int i = 0; i < THREAD_DRAWER_NUMBER; i++) {
-        threadDrawer[i] = std::thread(&m_oneDrawerFunc2, std::ref(fbuf), heightINT, widthINT, depth, std::ref(paramFract), i);
+        threadDrawer[i] = std::thread(&m_oneDrawerFunc2, std::ref(fbuf), heightINT, widthINT, depth, std::ref(paramFract), i, color);
     }
     for(int i = 0; i < THREAD_DRAWER_NUMBER; i++) {
         if (threadDrawer[i].joinable())
