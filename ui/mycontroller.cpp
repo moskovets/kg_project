@@ -199,7 +199,7 @@ double MyController::m_getScaleResolution()
         return scale;
     }
     if (ui->resolution_2radioButton->isChecked()) {
-        return scale * 2;
+        return scale * sqrt(2);
     }
     return 1.0;
 }
