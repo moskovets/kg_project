@@ -3,7 +3,8 @@
 #include <iostream>
 #include <QDebug>
 #define BORDERX 185
-#define BORDERY 160
+#define BORDERY 200
+//160
 
 MyGraphicView::MyGraphicView(QWidget *parent) :
      QGraphicsView(parent),

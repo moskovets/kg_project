@@ -23,25 +23,7 @@
       <height>251</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="mainLayout">
-     <item>
-      <widget class="QTabWidget" name="tabWidget">
-       <property name="currentIndex">
-        <number>0</number>
-       </property>
-       <widget class="QWidget" name="draw">
-        <attribute name="title">
-         <string>Отрисовка</string>
-        </attribute>
-       </widget>
-       <widget class="QWidget" name="analiz">
-        <attribute name="title">
-         <string>Анализ времени работы</string>
-        </attribute>
-       </widget>
-      </widget>
-     </item>
-    </layout>
+    <layout class="QVBoxLayout" name="mainLayout"/>
    </widget>
   </widget>
  </widget>

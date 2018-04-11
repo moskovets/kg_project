@@ -24,12 +24,16 @@ struct tParamFractal {
     double r;
     int maxIter;
 
-    double xAngle;
-    double yAngle;
-    double zAngle;
+    //double xAngle;
+    //double yAngle;
+    //double zAngle;
 
     Vector4 lightVector;
     Color   lightColor;
+    Color   fonColor;
+    int     scale;
+    int     thread_count;
+
 };
 
 struct tPaintParam {

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>347</width>
-    <height>482</height>
+    <width>495</width>
+    <height>540</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -30,8 +30,8 @@
     <rect>
      <x>1</x>
      <y>10</y>
-     <width>343</width>
-     <height>471</height>
+     <width>491</width>
+     <height>531</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -64,7 +64,7 @@
        </font>
       </property>
       <property name="title">
-       <string> Параметры фрактала                 Константа с </string>
+       <string> Параметры фрактала                 Константа k </string>
       </property>
       <widget class="QLabel" name="label_2">
        <property name="geometry">
@@ -496,8 +496,8 @@
       <widget class="QLabel" name="visorlabel">
        <property name="geometry">
         <rect>
-         <x>40</x>
-         <y>50</y>
+         <x>217</x>
+         <y>61</y>
          <width>21</width>
          <height>21</height>
         </rect>
@@ -517,29 +517,11 @@
         <string/>
        </property>
       </widget>
-      <widget class="QLabel" name="label_13">
-       <property name="geometry">
-        <rect>
-         <x>35</x>
-         <y>23</y>
-         <width>141</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Хрень</string>
-       </property>
-      </widget>
       <widget class="QLabel" name="lightlabel">
        <property name="geometry">
         <rect>
-         <x>199</x>
-         <y>50</y>
+         <x>217</x>
+         <y>31</y>
          <width>21</width>
          <height>21</height>
         </rect>
@@ -559,10 +541,10 @@
       <widget class="QLabel" name="label_15">
        <property name="geometry">
         <rect>
-         <x>210</x>
-         <y>24</y>
-         <width>131</width>
-         <height>21</height>
+         <x>177</x>
+         <y>27</y>
+         <width>41</width>
+         <height>31</height>
         </rect>
        </property>
        <property name="font">
@@ -571,14 +553,19 @@
         </font>
        </property>
        <property name="text">
-        <string>Цвет света</string>
+        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Цвет&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;света&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
       <widget class="QPushButton" name="lightcolorButton">
        <property name="geometry">
         <rect>
-         <x>229</x>
-         <y>50</y>
+         <x>247</x>
+         <y>31</y>
          <width>71</width>
          <height>23</height>
         </rect>
@@ -590,8 +577,8 @@
       <widget class="QPushButton" name="visorcolorButton">
        <property name="geometry">
         <rect>
-         <x>70</x>
-         <y>50</y>
+         <x>247</x>
+         <y>61</y>
          <width>71</width>
          <height>23</height>
         </rect>
@@ -600,153 +587,24 @@
         <string>Задать</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="xAngleEdit">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>100</y>
-         <width>61</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>0</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="yAngleEdit">
-       <property name="geometry">
-        <rect>
-         <x>140</x>
-         <y>100</y>
-         <width>61</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>0</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="zAngleEdit">
-       <property name="geometry">
-        <rect>
-         <x>240</x>
-         <y>100</y>
-         <width>61</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>0</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_16">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>74</y>
-         <width>211</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Поворот камеры (в градусах)</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_18">
-       <property name="geometry">
-        <rect>
-         <x>8</x>
-         <y>99</y>
-         <width>21</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Ox</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_19">
-       <property name="geometry">
-        <rect>
-         <x>210</x>
-         <y>99</y>
-         <width>21</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Oz</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_20">
-       <property name="geometry">
-        <rect>
-         <x>108</x>
-         <y>99</y>
-         <width>21</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Oy</string>
-       </property>
-      </widget>
       <widget class="QLineEdit" name="zLightEdit">
        <property name="geometry">
         <rect>
-         <x>240</x>
-         <y>143</y>
+         <x>257</x>
+         <y>140</y>
          <width>61</width>
          <height>21</height>
         </rect>
        </property>
        <property name="text">
         <string>0</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_21">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>121</y>
-         <width>211</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Вектор направления света</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="xLightEdit">
        <property name="geometry">
         <rect>
-         <x>30</x>
-         <y>143</y>
+         <x>257</x>
+         <y>90</y>
          <width>61</width>
          <height>21</height>
         </rect>
@@ -758,8 +616,8 @@
       <widget class="QLabel" name="label_22">
        <property name="geometry">
         <rect>
-         <x>108</x>
-         <y>142</y>
+         <x>238</x>
+         <y>112</y>
          <width>21</width>
          <height>21</height>
         </rect>
@@ -776,8 +634,8 @@
       <widget class="QLineEdit" name="yLightEdit">
        <property name="geometry">
         <rect>
-         <x>140</x>
-         <y>143</y>
+         <x>257</x>
+         <y>114</y>
          <width>61</width>
          <height>21</height>
         </rect>
@@ -789,8 +647,8 @@
       <widget class="QLabel" name="label_23">
        <property name="geometry">
         <rect>
-         <x>8</x>
-         <y>142</y>
+         <x>237</x>
+         <y>90</y>
          <width>21</width>
          <height>21</height>
         </rect>
@@ -807,8 +665,8 @@
       <widget class="QLabel" name="label_24">
        <property name="geometry">
         <rect>
-         <x>210</x>
-         <y>142</y>
+         <x>237</x>
+         <y>139</y>
          <width>21</width>
          <height>21</height>
         </rect>
@@ -822,29 +680,224 @@
         <string>z</string>
        </property>
       </widget>
-      <zorder>visorlabel</zorder>
-      <zorder>label_13</zorder>
-      <zorder>lightlabel</zorder>
-      <zorder>label_15</zorder>
-      <zorder>lightcolorButton</zorder>
-      <zorder>visorcolorButton</zorder>
-      <zorder>yAngleEdit</zorder>
-      <zorder>zAngleEdit</zorder>
-      <zorder>xAngleEdit</zorder>
-      <zorder>xAngleEdit</zorder>
-      <zorder>yAngleEdit</zorder>
-      <zorder>zAngleEdit</zorder>
-      <zorder>label_16</zorder>
-      <zorder>label_18</zorder>
-      <zorder>label_19</zorder>
-      <zorder>label_20</zorder>
-      <zorder>zLightEdit</zorder>
-      <zorder>label_21</zorder>
-      <zorder>xLightEdit</zorder>
-      <zorder>label_22</zorder>
-      <zorder>yLightEdit</zorder>
-      <zorder>label_23</zorder>
-      <zorder>label_24</zorder>
+      <widget class="QLabel" name="label_16">
+       <property name="geometry">
+        <rect>
+         <x>177</x>
+         <y>58</y>
+         <width>41</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Цвет&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;фона&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="prewiewlabel">
+       <property name="geometry">
+        <rect>
+         <x>4</x>
+         <y>24</y>
+         <width>141</width>
+         <height>141</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(0, 0, 0)</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_18">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>90</y>
+         <width>91</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Вектор&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;направления&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;луча&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;света&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+      <widget class="Line" name="line_2">
+       <property name="geometry">
+        <rect>
+         <x>313</x>
+         <y>24</y>
+         <width>20</width>
+         <height>161</height>
+        </rect>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="algoradioButton">
+       <property name="geometry">
+        <rect>
+         <x>327</x>
+         <y>30</y>
+         <width>141</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Обычный режим</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="algoSphereradioButton">
+       <property name="geometry">
+        <rect>
+         <x>327</x>
+         <y>50</y>
+         <width>161</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Отрисовка сферами</string>
+       </property>
+      </widget>
+      <widget class="Line" name="line_3">
+       <property name="geometry">
+        <rect>
+         <x>322</x>
+         <y>70</y>
+         <width>171</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QGroupBox" name="groupBox_4">
+       <property name="geometry">
+        <rect>
+         <x>330</x>
+         <y>80</y>
+         <width>151</width>
+         <height>91</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Разрешение</string>
+       </property>
+       <widget class="QRadioButton" name="resolution16radioButton">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>20</y>
+          <width>100</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1:16</string>
+        </property>
+       </widget>
+       <widget class="QRadioButton" name="resolution9radioButton">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>40</y>
+          <width>100</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1:9</string>
+        </property>
+       </widget>
+       <widget class="QRadioButton" name="resolution4radioButton">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>60</y>
+          <width>100</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1:4</string>
+        </property>
+       </widget>
+       <widget class="QRadioButton" name="resolution_2radioButton">
+        <property name="geometry">
+         <rect>
+          <x>80</x>
+          <y>40</y>
+          <width>100</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>2:1</string>
+        </property>
+       </widget>
+       <widget class="QRadioButton" name="resolution1radioButton">
+        <property name="geometry">
+         <rect>
+          <x>80</x>
+          <y>20</y>
+          <width>100</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1:1</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QPushButton" name="previewButton">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>160</y>
+         <width>111</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Предпросмотр</string>
+       </property>
+      </widget>
      </widget>
     </item>
     <item>
@@ -874,13 +927,13 @@
         <rect>
          <x>3</x>
          <y>30</y>
-         <width>331</width>
+         <width>481</width>
          <height>23</height>
         </rect>
        </property>
        <item>
         <property name="text">
-         <string>q^2 + c</string>
+         <string>q^2 + k</string>
         </property>
        </item>
       </widget>

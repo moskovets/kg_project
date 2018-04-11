@@ -7,22 +7,22 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setFixedSize(1200, 700);
+    this->setFixedSize(1300, 700);
     //QHBoxLayout *mainLayout = new QHBoxLayout;
-    ui->centralWidget->setLayout(ui->mainLayout);
+    //ui->centralWidget->setLayout(ui->mainLayout);
     //QTabWidget *tab = new QTabWidget();
     //mainLayout->addWidget(tab);
     QHBoxLayout *layout = new QHBoxLayout;
     //tab->addTab(layout, "draw");
-    ui->draw->setLayout(layout);
+    ui->centralWidget->setLayout(layout);
     this->setWindowTitle("Курсовой проект");
-
+   // ui->analiz->setVisible(false);
     myPicture   = new MyGraphicView();
     layout->addWidget(myPicture);
 
     myController   = new MyController();
     layout->addWidget(myController);
-    myController->setFixedWidth(347); //magic :)
+    myController->setFixedWidth(495); //magic :)
 
     QObject::connect(myPicture, SIGNAL(SendScene(tScene*)),
             this, SLOT(SendingScene(tScene*)));

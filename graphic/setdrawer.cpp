@@ -1,9 +1,9 @@
 #include "setdrawer.h"
 
 
-SetDrawer::SetDrawer(uint32_t h, uint32_t w, unsigned xnum, unsigned ynum, double radius, const Light &light)
+SetDrawer::SetDrawer(uint32_t h, uint32_t w, unsigned xnum, unsigned ynum, double radius, const Light &light, const Color &fonColor)
 {
-    std::shared_ptr<FrameBuffer> frame(new FrameBuffer(h, w));
+    std::shared_ptr<FrameBuffer> frame(new FrameBuffer(h, w, fonColor));
     m_drawer = new Drawer3D(frame, DME_GURO, light);
     m_render = new Render(frame);
     m_mesh = new Mesh();

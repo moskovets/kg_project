@@ -14,7 +14,8 @@ class SetDrawer
     Model        m_model;
 public:
     SetDrawer(uint32_t h, uint32_t w, unsigned xnum = 10, unsigned ynum = 10, double radius = 1,
-              const Light &light = Light(Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)), Color(255, 255, 255)));
+              const Light &light = Light(Vector4(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)), Color(255, 255, 255)),
+              const Color &fonColor = Color());
 
     ~SetDrawer();
 

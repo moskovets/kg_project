@@ -191,7 +191,7 @@ void CImage::algoThread2(tScene &scene, tPaintParam &param, BaseFunction *func, 
 
     int widthINT = image.width() / 4;
 
-    std::shared_ptr<FrameBuffer> fbuf(new FrameBuffer(heightINT, widthINT));
+    std::shared_ptr<FrameBuffer> fbuf(new FrameBuffer(heightINT, widthINT, paramFract.fonColor));
     double** depth;
     depth = new double* [heightINT + 2];
     for (int i = 0; i < heightINT + 2; i++) {
@@ -433,7 +433,7 @@ void m_oneDrawerFunc(RingBuffer<Vector4, BUFSIZE> &buff,  SetDrawer &setDrawer, 
             popCount++;
             if(popCount % 1000 == 0)
                 std::cout << "drawing " << popCount << " points\n";
-            setDrawer.setPixel(pos, Color(255, 255, 255));
+            setDrawer.setPixel(pos, Color(255));
         }
     }
 }

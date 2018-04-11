@@ -43,9 +43,9 @@ MyController::MyController(QWidget *parent) :
 
     ui->maxIterEdit->setValidator(Validator);
 
-    ui->xAngleEdit->setValidator(ValidatorDouble);
-    ui->yAngleEdit->setValidator(ValidatorDouble);
-    ui->zAngleEdit->setValidator(ValidatorDouble);
+    //ui->xAngleEdit->setValidator(ValidatorDouble);
+    //ui->yAngleEdit->setValidator(ValidatorDouble);
+    //ui->zAngleEdit->setValidator(ValidatorDouble);
 
     ui->xLightEdit->setValidator(ValidatorDouble);
     ui->yLightEdit->setValidator(ValidatorDouble);
@@ -195,7 +195,8 @@ void MyController::on_visorcolorButton_clicked()
     }
     ui->visorlabel->setStyleSheet("background-color: " + GetColor(color));
     data.color = color;
-    colorLine = color;
+    m_fonColor = Color(color.red(), color.green(), color.blue());
+    //colorLine = color;
 }
 
 void MyController::on_clearButton_clicked()
@@ -222,9 +223,9 @@ void MyController::on_drawButton_clicked()
     edits.push_back(ui->rEdit);
     edits.push_back(ui->maxIterEdit);
 
-    edits.push_back(ui->xAngleEdit);
-    edits.push_back(ui->yAngleEdit);
-    edits.push_back(ui->zAngleEdit);
+    //edits.push_back(ui->xAngleEdit);
+    //edits.push_back(ui->yAngleEdit);
+    //edits.push_back(ui->zAngleEdit);
 
     edits.push_back(ui->xLightEdit);
     edits.push_back(ui->yLightEdit);
@@ -239,7 +240,7 @@ void MyController::on_drawButton_clicked()
     BaseFunction* func = getFunction(c);
 
 
-    Vector4 lightVector(arr[15], arr[16], arr[17]);
+    Vector4 lightVector(arr[12], arr[13], arr[14]);
     tParamFractal param = {
         arr[4],
         arr[5],
@@ -250,15 +251,35 @@ void MyController::on_drawButton_clicked()
 
         arr[10],
         (int)arr[11],
-        arr[12],
-        arr[13],
-        arr[14],
         lightVector.norm3(),
-        m_lightColor
+        m_lightColor,
+        m_fonColor
     };
 
     //image.algo(scene, this->data, func, param);
     image.algoThread2(scene, this->data, func, param);
 
     delete[] arr;
+}
+
+void MyController::on_previewButton_clicked()
+{
+    vector<QLineEdit*> edits;
+
+    edits.push_back(ui->xLightEdit);
+    edits.push_back(ui->yLightEdit);
+    edits.push_back(ui->zLightEdit);
+
+    double *arr = GetData(edits);
+
+    if(LineEditError != NO_ER)
+        return;
+
+    Vector4 lightVector(arr[0], arr[1], arr[2]);
+
+    SetDrawer setDrawer(ui->prewiewlabel->size().height(), ui->prewiewlabel->size().width(), 20, 20, 3, Light(lightVector, m_lightColor), m_fonColor);
+    QImage image = setDrawer.getImage().scaled(ui->prewiewlabel->size().height(), ui->prewiewlabel->size().width());
+    QPixmap pixmap;
+    pixmap.convertFromImage(image);
+    ui->prewiewlabel->setPixmap(pixmap);
 }

@@ -47,6 +47,8 @@ private slots:
 
     void on_drawButton_clicked();
 
+    void on_previewButton_clicked();
+
 private:
     QString GetColor(QColor &color);
     double *GetData(vector <QLineEdit*> &vec);
@@ -62,6 +64,7 @@ private:
     QIntValidator *Validator;
 
     Color m_lightColor;
+    Color m_fonColor;
 
 };
 
