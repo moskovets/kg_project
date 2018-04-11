@@ -31,8 +31,11 @@ struct tParamFractal {
     Vector4 lightVector;
     Color   lightColor;
     Color   fonColor;
-    int     scale;
+    double  scale;
     int     thread_count;
+    double  radiusSphere;
+
+    double w;
 
 };
 

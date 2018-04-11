@@ -6,7 +6,7 @@
 class JuliaSetAlgo
 {
     JuliaSet *m_set;
-
+    int m_maxIter;
 public:
     JuliaSetAlgo(JuliaSet *set = nullptr);
 

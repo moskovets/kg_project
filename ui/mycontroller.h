@@ -47,12 +47,16 @@ private slots:
 
     void on_drawButton_clicked();
 
+    void on_drawButtom_clicked();
+
     void on_previewButton_clicked();
 
 private:
     QString GetColor(QColor &color);
     double *GetData(vector <QLineEdit*> &vec);
     BaseFunction* getFunction(const Quaternion &c);
+    double m_getScaleResolution();
+    int m_getThreadNumber();
 
     tScene scene;
     tPaintParam  data;

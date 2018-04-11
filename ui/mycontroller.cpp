@@ -9,7 +9,7 @@
 #include <QDebug>
 
 #include "juliafunctions.h"
-
+#include "graphic/dimension4.h"
 #define MIN_PAR    10
 #define LEN        300
 #define MAX_PIXEL  100
@@ -51,6 +51,10 @@ MyController::MyController(QWidget *parent) :
     ui->yLightEdit->setValidator(ValidatorDouble);
     ui->zLightEdit->setValidator(ValidatorDouble);
 
+    ui->radSphereEdit->setValidator(ValidatorDouble);
+
+    ui->wEdit->setValidator(ValidatorDouble);
+
     //установка значений по умолчанию
     ui->aEdit->setText("-0.65");
     ui->bEdit->setText("-0.5");
@@ -71,14 +75,17 @@ MyController::MyController(QWidget *parent) :
     ui->yLightEdit->setText(QString::number(1/sqrt(3)));
     ui->zLightEdit->setText(QString::number(1/sqrt(3)));
 
+    ui->radSphereEdit->setText("0.01");
+
     //TODO
     m_lightColor = Color(255, 255, 255);
+    m_fonColor = Color(0, 0, 0);
     //data.fon = QColor(255, 255, 255); //фон черный
     //data.color = QColor(0, 0, 0); //цвет наблюдателя
     //colorLine = data.color;
     data.sizePixel = 1;
 
-
+    ui->previewButton->clicked();
 }
 void MyController::GetScene(tScene *scene1)
 {
@@ -125,6 +132,15 @@ double * MyController::GetData(vector <QLineEdit*> &vec)
     }
    return data;
 }
+void MyController::on_drawButton_clicked()
+{
+    try {
+        this->on_drawButtom_clicked();
+    }
+    catch(...) {
+    }
+    std::cout << "end\n";
+}
 //анализ строки данных (проверка, явл-тся ли вещественным числом)
 double Analiz_Text(QString str)
 {
@@ -159,10 +175,53 @@ BaseFunction* MyController::getFunction(const Quaternion &c)
     {
     case 0:
         return new Function1(c);
+    case 1:
+        return new Function2(c);
     //TODO добавить остальные функции
     default:
         return new Function1(c);
     }
+}
+
+double MyController::m_getScaleResolution()
+{
+    double scale = 1;
+    if (ui->resolution16radioButton->isChecked()) {
+        return scale / 4;
+    }
+    if (ui->resolution9radioButton->isChecked()) {
+        return scale / 3;
+    }
+    if (ui->resolution4radioButton->isChecked()) {
+        return scale / 2;
+    }
+    if (ui->resolution1radioButton->isChecked()) {
+        return scale;
+    }
+    if (ui->resolution_2radioButton->isChecked()) {
+        return scale * 2;
+    }
+    return 1.0;
+}
+
+int MyController::m_getThreadNumber()
+{
+    if (ui->thread1radioButton->isChecked()) {
+        return 1;
+    }
+    if (ui->thread2radioButton->isChecked()) {
+        return 2;
+    }
+    if (ui->thread4radioButton->isChecked()) {
+        return 4;
+    }
+    if (ui->thread8radioButton->isChecked()) {
+        return 8;
+    }
+    if (ui->thread3radioButton->isChecked()) {
+        return 3;
+    }
+    return 1;
 }
 
 QString MyController::GetColor(QColor &color)
@@ -205,7 +264,9 @@ void MyController::on_clearButton_clicked()
 }
 
 
-void MyController::on_drawButton_clicked()
+
+
+void MyController::on_drawButtom_clicked()
 {
     vector<QLineEdit*> edits;
     edits.push_back(ui->aEdit);
@@ -231,6 +292,10 @@ void MyController::on_drawButton_clicked()
     edits.push_back(ui->yLightEdit);
     edits.push_back(ui->zLightEdit);
 
+    edits.push_back(ui->radSphereEdit);
+
+    edits.push_back(ui->wEdit);
+
     double *arr = GetData(edits);
 
     if(LineEditError != NO_ER)
@@ -255,11 +320,28 @@ void MyController::on_drawButton_clicked()
         m_lightColor,
         m_fonColor
     };
+    param.scale = m_getScaleResolution();
+    param.thread_count = m_getThreadNumber();
+    param.radiusSphere = arr[15];
 
+    double w = arr[16];
+    param.w = w;
+    if (ui->colorModecheckBox->isChecked()) {
+        if (w >= -1 && w <= 1) {
+            double w0 = (w + 1) / 2;
+            Dimension4 d;
+            param.lightColor = d.getColorForNormCoord(w0);
+        }
+    }
     //image.algo(scene, this->data, func, param);
-    image.algoThread2(scene, this->data, func, param);
-
+    if (ui->algoradioButton->isChecked()) {
+        image.algoThread2(scene, this->data, func, param);
+    }
+    else {
+        image.algoThread(scene, this->data, func, param);
+    }
     delete[] arr;
+
 }
 
 void MyController::on_previewButton_clicked()
@@ -276,8 +358,9 @@ void MyController::on_previewButton_clicked()
         return;
 
     Vector4 lightVector(arr[0], arr[1], arr[2]);
-
-    SetDrawer setDrawer(ui->prewiewlabel->size().height(), ui->prewiewlabel->size().width(), 20, 20, 3, Light(lightVector, m_lightColor), m_fonColor);
+    lightVector.normalize3();
+    SetDrawer setDrawer(ui->prewiewlabel->size().height(), ui->prewiewlabel->size().width(), 20, 20, 0.75, Light(lightVector, m_lightColor), m_fonColor);
+    setDrawer.setPixel(Vector4(0, 0, 10), Color(255, 255, 255));
     QImage image = setDrawer.getImage().scaled(ui->prewiewlabel->size().height(), ui->prewiewlabel->size().width());
     QPixmap pixmap;
     pixmap.convertFromImage(image);
